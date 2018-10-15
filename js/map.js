@@ -1,8 +1,6 @@
 // todo
-// od-toggle
-// smaller grid
 // deploy api
-// description panel
+// highlight source cells
 
 var API_URL = 'http://localhost:5000/api'
 
@@ -13,13 +11,12 @@ var query_layer;
 var od_layer;
 var data;
 var first = true;
-var mode = 'origin'
-
 
 $(document).keyup(function(e) {
   if (e.keyCode === 27) {
     showLayer('feature_layer', false);
     removeQueryLayer();
+    removeStats();
   }
 });
 
@@ -51,15 +48,20 @@ map.addControl(Draw, 'top-left');
 
 map.on('load', function() {
 
+    var mode = $('#modeSelector option:selected').val();
+
+    $('#modeSelector').change(function(){
+        mode = $('#modeSelector option:selected').val();
+    })
 
     map.on('draw.create', function (e) {
         updateQueryLayers(e);
-        var url = getUrl(e);
+        var url = getUrl(e, mode);
         getData(url);
     });
 
     map.on('draw.update', function (e) {
-        var url = getUrl(e);
+        var url = getUrl(e, mode);
         getData(url);
     });
 
@@ -77,10 +79,10 @@ map.on('load', function() {
         map.getCanvas().style.cursor = '';
     });
 
-    function getUrl(e) {
+    function getUrl(e, mode) {
         var coordinates = e.features[0].geometry.coordinates.toString();
   
-        url = API_URL + "?xy=" + coordinates;
+        url = API_URL + "?xy=" + coordinates + '&mode=' + mode;
         return(url);
 
     }
@@ -214,10 +216,13 @@ function getPaint(total_trips) {
     ]
 }
 
-
-
 function postTrips(total_trips, divId="dataPane") {
 
-    $('#dataPane').html('<h4>Total Trips :' + total_trips + '</h4>');
+    $('#dataPane').html('<h4>Total Trips: ' + total_trips + '</h4>');
 
+}
+
+
+function removeStats(divId="dataPane") {
+    $('#dataPane').html('');
 }

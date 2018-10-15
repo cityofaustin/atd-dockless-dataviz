@@ -47,12 +47,18 @@
                   <form id="modeSelector" action="#">
                     <div class="form-group">
                       <div class="form-row">
-                        <label for="uom" class="col-sm-3 col-form-label">Mode</label>
+                        <label for="uom" class="col-sm-2 col-form-label">Mode</label>
                         <div class="col">
                           <select class="form-control" id="uom">
-                            <option value="feet">Origin</option>
-                            <option value="kilometers">Destination</option>
+                            <option value="origin">Origin</option>
+                            <option value="destination">Destination</option>
                           </select>
+                          <small class="form-text text-muted">
+                            <b>Orgin</b>: Orign of trips to selected region.
+                          </small>
+                          <small class="form-text text-muted">
+                            <b>Destination</b>: Destination of trips from selected region.
+                          </small>
                         </div>
                       </div>
                     </div>
