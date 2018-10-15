@@ -13,6 +13,16 @@ var query_layer;
 var od_layer;
 var data;
 var first = true;
+var mode = 'origin'
+
+
+$(document).keyup(function(e) {
+  if (e.keyCode === 27) {
+    showLayer('feature_layer', false);
+    removeQueryLayer();
+  }
+});
+
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoiam9obmNsYXJ5IiwiYSI6ImNqbjhkZ25vcjF2eTMzbG52dGRlbnVqOHAifQ.y1xhnHxbB6KlpQgTp1g1Ow';
 
@@ -54,10 +64,7 @@ map.on('load', function() {
     });
 
     map.on('click', 'feature_layer', function (e) {
-        new mapboxgl.Popup()
-            .setLngLat(e.lngLat)
-            .setHTML(getPopup(e.features[0]))
-            .addTo(map);
+        postCellTripCount(e.features[0])
     });
 
     // Change the cursor to a pointer when the mouse is over the states layer.
@@ -84,6 +91,18 @@ map.on('load', function() {
 function addFeatures(features, total_trips) {
 
     if (first) {
+
+        // Insert the layer beneath any symbol layer.
+        var layers = map.getStyle().layers;
+
+        var labelLayerId;
+        for (var i = 0; i < layers.length; i++) {
+            if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
+                labelLayerId = layers[i].id;
+                break;
+            }
+        }
+
         map.addLayer({
             'id' : 'feature_layer',
             'type': 'fill-extrusion',
@@ -106,14 +125,15 @@ function addFeatures(features, total_trips) {
                 // use an 'interpolate' expression to add a smooth transition effect to the
                 // buildings as the user zooms in
                 'fill-extrusion-height': [
-                    '*', ['number', ['get', 'current_count']], 10
+                    '*', ['number', ['get', 'current_count']], 2
                 ],
                 'fill-extrusion-base': 0,
                 'fill-extrusion-opacity': .6
-            }
+            } 
 
         });
-
+        showLayer('feature_layer', true);
+        postTrips(total_trips);
         first = false;
     } else {
         // map.removeLayer('feature_layer');
@@ -123,9 +143,13 @@ function addFeatures(features, total_trips) {
 }   
 
 
+
+
 function updateLayer(features) {
     map.getSource('feature_layer').setData(features);
     map.setPaintProperty('feature_layer', 'fill-extrusion-color', getPaint(total_trips));
+    showLayer('feature_layer', true);
+    postTrips(total_trips);
 }
 
 function updateQueryLayers(e) {
@@ -142,24 +166,38 @@ function updateQueryLayers(e) {
 
 function getData(url) {
     d3.json(url, {
-            headers : {
-                "Access-Control-Allow-Origin" : 'http://localhost:5000'
-            }
-        }).then(function(json){
-            total_trips = json.total_trips;
-            addFeatures(json.features, json.total_trips);
-        });
+        headers : {
+            "Access-Control-Allow-Origin" : 'http://localhost:5000'
+        }
+    }).then(function(json){
+        total_trips = json.total_trips;
+        addFeatures(json.features, json.total_trips);
+    });
 }
 
 
-function getPopup(feature) {
+function postCellTripCount(feature) {
+
     var trip_percent = feature.properties.current_count / total_trips;
-
-    return "Trips: " + feature.properties.current_count + " (" + formatPct(trip_percent) + ")";
-
+    var html = "<p id=cellTripCount >Clicked cell contains " + feature.properties.current_count + " (" + formatPct(trip_percent) + ") trips.<p>";
+    $('#cellTripCount').remove();
+    $('#dataPane').append(html);
 }
-function clearMap() {
+
+function removeQueryLayer() {
+    // delete the drawn feature
     updateQueryLayers(null);
+}
+
+function showLayer(layer_name, show_layer) {
+
+    if (!show_layer) {
+        map.setLayoutProperty(layer_name, 'visibility', 'none');
+        this.className = '';
+    } else {
+        this.className = 'active';
+        map.setLayoutProperty(layer_name, 'visibility', 'visible');
+    }
 }
 
 
@@ -174,4 +212,12 @@ function getPaint(total_trips) {
         .07, "#f03b20",
         .1, "#bd0026",
     ]
+}
+
+
+
+function postTrips(total_trips, divId="dataPane") {
+
+    $('#dataPane').html('<h4>Total Trips :' + total_trips + '</h4>');
+
 }

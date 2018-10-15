@@ -1,0 +1,14 @@
+.map-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.8);
+  overflow: auto;
+  border-radius: 3px;
+  width: auto;
+}
+
+
+#title {
+  top: 0;
+}
