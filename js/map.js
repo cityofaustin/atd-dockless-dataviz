@@ -2,7 +2,7 @@
 // deploy api
 // highlight source cells
 
-var API_URL = 'http://localhost:5000/api'
+var API_URL = 'http://18.232.168.251/api'
 
 var formatPct = d3.format(".1%");
 
@@ -12,6 +12,7 @@ var od_layer;
 var data;
 var first = true;
 
+// clear map on ESC key press
 $(document).keyup(function(e) {
   if (e.keyCode === 27) {
     showLayer('feature_layer', false);
@@ -19,7 +20,6 @@ $(document).keyup(function(e) {
     removeStats();
   }
 });
-
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoiam9obmNsYXJ5IiwiYSI6ImNqbjhkZ25vcjF2eTMzbG52dGRlbnVqOHAifQ.y1xhnHxbB6KlpQgTp1g1Ow';
 
@@ -32,20 +32,24 @@ var mapOptions = {
     maxZoom : 19
 };
 
-var drawOptions = {
-    controls : {line_string : false, combine_features: false, uncombine_features: false}
-}
-
+// init map
 var map = new mapboxgl.Map(mapOptions);
 
+// add nav
 var nav = new mapboxgl.NavigationControl();
 
 map.addControl(nav, 'top-left');
+
+// add drawing
+var drawOptions = {
+    controls : {line_string : false, combine_features: false, uncombine_features: false}
+}
 
 var Draw = new MapboxDraw(drawOptions);
 
 map.addControl(Draw, 'top-left');
 
+// do magic
 map.on('load', function() {
 
     var mode = $('#modeSelector option:selected').val();
@@ -94,17 +98,6 @@ function addFeatures(features, total_trips) {
 
     if (first) {
 
-        // Insert the layer beneath any symbol layer.
-        var layers = map.getStyle().layers;
-
-        var labelLayerId;
-        for (var i = 0; i < layers.length; i++) {
-            if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
-                labelLayerId = layers[i].id;
-                break;
-            }
-        }
-
         map.addLayer({
             'id' : 'feature_layer',
             'type': 'fill-extrusion',
@@ -124,8 +117,7 @@ function addFeatures(features, total_trips) {
                     .07, "#f03b20",
                     .1, "#bd0026",
                 ],
-                // use an 'interpolate' expression to add a smooth transition effect to the
-                // buildings as the user zooms in
+
                 'fill-extrusion-height': [
                     '*', ['number', ['get', 'current_count']], 2
                 ],
@@ -138,13 +130,10 @@ function addFeatures(features, total_trips) {
         postTrips(total_trips);
         first = false;
     } else {
-        // map.removeLayer('feature_layer');
         updateLayer(features);
     }
 
 }   
-
-
 
 
 function updateLayer(features) {
@@ -217,9 +206,7 @@ function getPaint(total_trips) {
 }
 
 function postTrips(total_trips, divId="dataPane") {
-
     $('#dataPane').html('<h4>Total Trips: ' + total_trips + '</h4>');
-
 }
 
 
