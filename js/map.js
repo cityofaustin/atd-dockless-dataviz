@@ -8,6 +8,7 @@ var formatPct = d3.format(".1%");
 
 var total_trips;
 var data;
+var mode;
 var first = true;
 
 // clear map on ESC key press
@@ -50,7 +51,7 @@ map.addControl(Draw, 'top-left');
 // do magic
 map.on('load', function() {
 
-    var mode = $('#modeSelector option:selected').val();
+    mode = $('#modeSelector option:selected').val();
 
     $('#modeSelector').change(function(){
         mode = $('#modeSelector option:selected').val();
@@ -182,7 +183,13 @@ function getData(url) {
 function postCellTripCount(feature) {
 
     var trip_percent = feature.properties.current_count / total_trips;
-    var html = "<p id=cellTripCount >Clicked cell contains " + feature.properties.current_count + " (" + formatPct(trip_percent) + ") trips.<p>";
+    if (mode == 'origin') {
+        var html = "<p id=cellTripCount >" + feature.properties.current_count + " (" + formatPct(trip_percent) + ") trips originated in the clicked cell.<p>";
+    } else if (mode == 'destination') {
+        var html = "<p id=cellTripCount >" + feature.properties.current_count + " (" + formatPct(trip_percent) + ") trips terminated in the clicked cell.<p>";
+    }
+
+    
     $('#cellTripCount').remove();
     $('#dataPane').append(html);
 }
@@ -213,7 +220,12 @@ function getPaint(total_trips) {
 }
 
 function postTrips(total_trips, divId="dataPane") {
-    $('#dataPane').html('<h4>Total Trips: ' + total_trips + '</h4>');
+    if (mode == 'origin') {
+        var html = '<h5>' + total_trips + ' trips terminated in the selected area.</h5>'
+    } else if (mode == 'destination') {
+        var html = '<h5>' + total_trips + ' trips originated in the selected area.</h5>'
+    }
+    $('#dataPane').html(html);
 }
 
 
