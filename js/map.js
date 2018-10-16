@@ -2,7 +2,7 @@
 // deploy api
 // highlight source cells
 
-var API_URL = 'http://localhost:5000/api'
+var API_URL = 'https://dockless-data.austintexas.io'
 
 var formatPct = d3.format(".1%");
 
