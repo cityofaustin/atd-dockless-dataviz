@@ -7,8 +7,6 @@ var API_URL = 'https://dockless-data.austintexas.io/api'
 var formatPct = d3.format(".1%");
 
 var total_trips;
-var query_layer;
-var od_layer;
 var data;
 var first = true;
 
@@ -16,7 +14,7 @@ var first = true;
 $(document).keyup(function(e) {
   if (e.keyCode === 27) {
     showLayer('feature_layer', false);
-    removeQueryLayer();
+    showLayer('reference_layer', false);
     removeStats();
   }
 });
@@ -42,7 +40,7 @@ map.addControl(nav, 'top-left');
 
 // add drawing
 var drawOptions = {
-    controls : {line_string : false, combine_features: false, uncombine_features: false}
+    controls : {trash: false, line_string : false, combine_features: false, uncombine_features: false}
 }
 
 var Draw = new MapboxDraw(drawOptions);
@@ -59,7 +57,6 @@ map.on('load', function() {
     })
 
     map.on('draw.create', function (e) {
-        updateQueryLayers(e);
         var url = getUrl(e, mode);
         getData(url);
     });
@@ -94,7 +91,7 @@ map.on('load', function() {
 });
   
 
-function addFeatures(features, total_trips) {
+function addFeatures(features, reference_features, total_trips) {
 
     if (first) {
 
@@ -126,34 +123,48 @@ function addFeatures(features, total_trips) {
             } 
 
         });
+
+
+        map.addLayer({
+            'id' : 'reference_layer',
+            'type': 'line',
+            'source': {
+                'type' : 'geojson',
+                'data' : reference_features
+            },
+            'layout': {
+                'line-cap' : 'round',
+                'line-join' : 'round'
+            },
+            'paint': {
+                'line-color': '#000',
+                'line-opacity': 0.4,
+                'line-width' : 3,
+                'line-dasharray' : [3, 3]
+            }
+
+        });
+
         showLayer('feature_layer', true);
+        showLayer('reference_layer', true);
+
         postTrips(total_trips);
         first = false;
     } else {
-        updateLayer(features);
+        updateLayers(features, reference_features, total_trips);
     }
 
 }   
 
 
-function updateLayer(features) {
+function updateLayers(features, reference_features, total_trips) {
+    map.getSource('reference_layer').setData(reference_features);
     map.getSource('feature_layer').setData(features);
     map.setPaintProperty('feature_layer', 'fill-extrusion-color', getPaint(total_trips));
     showLayer('feature_layer', true);
     postTrips(total_trips);
 }
 
-function updateQueryLayers(e) {
-      // get bounds and send to grid api
-    if (!e) {
-        Draw.delete(query_layer);
-    } else if (query_layer) {
-        Draw.delete(query_layer);
-        query_layer = e.features[0].id;
-    } else {
-        query_layer = e.features[0].id;
-    }
-}
 
 function getData(url) {
     d3.json(url, {
@@ -161,8 +172,9 @@ function getData(url) {
             "Access-Control-Allow-Origin" : 'http://localhost:5000'
         }
     }).then(function(json){
+        Draw.deleteAll();
         total_trips = json.total_trips;
-        addFeatures(json.features, json.total_trips);
+        addFeatures(json.features, json.intersect_feature, json.total_trips);
     });
 }
 
@@ -173,11 +185,6 @@ function postCellTripCount(feature) {
     var html = "<p id=cellTripCount >Clicked cell contains " + feature.properties.current_count + " (" + formatPct(trip_percent) + ") trips.<p>";
     $('#cellTripCount').remove();
     $('#dataPane').append(html);
-}
-
-function removeQueryLayer() {
-    // delete the drawn feature
-    updateQueryLayers(null);
 }
 
 function showLayer(layer_name, show_layer) {
