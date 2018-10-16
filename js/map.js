@@ -2,7 +2,7 @@
 // deploy api
 // highlight source cells
 
-var API_URL = 'https://dockless-data.austintexas.io/api'
+var API_URL = 'http://localhost:5000/api'
 
 var formatPct = d3.format(".1%");
 
@@ -163,6 +163,7 @@ function updateLayers(features, reference_features, total_trips) {
     map.getSource('feature_layer').setData(features);
     map.setPaintProperty('feature_layer', 'fill-extrusion-color', getPaint(total_trips));
     showLayer('feature_layer', true);
+    showLayer('reference_layer', false);
     postTrips(total_trips);
 }
 
