@@ -1,6 +1,7 @@
 var API_URL = 'https://dockless-data.austintexas.io/api'
 
 var formatPct = d3.format(".1%");
+var formatKs = d3.format(",");
 
 var total_trips;
 var data;
@@ -216,9 +217,9 @@ function postCellTripCount(feature, divId="dataPane") {
     var trip_percent = feature.properties.current_count / total_trips;
     
     if (mode == 'origin') {
-        var text = feature.properties.current_count + " (" + formatPct(trip_percent) + ") trips originated in the clicked cell.";
+        var text = formatKs(feature.properties.current_count) + " (" + formatPct(trip_percent) + ") trips originated in the clicked cell.";
     } else if (mode == 'destination') {
-        var text = feature.properties.current_count + " (" + formatPct(trip_percent) + ") trips terminated in the clicked cell.";
+        var text = formatKs(feature.properties.current_count) + " (" + formatPct(trip_percent) + ") trips terminated in the clicked cell.";
     }
 
     var html = '<div id="cellTripCount" class="alert alert-dark stats" role="alert">' + text + 
@@ -255,9 +256,9 @@ function getPaint(total_trips) {
 
 function postTrips(total_trips, divId="dataPane") {
     if (mode == 'origin') {
-        var text = total_trips + ' trips terminated in the selected area.';
+        var text = formatKs(total_trips) + ' trips terminated in the selected area.';
     } else if (mode == 'destination') {
-        var text = total_trips + ' trips originated in the selected area.';
+        var text = formatKs(total_trips) + ' trips originated in the selected area.';
     }
 
     var html = '<div id="tripAlert" class="alert alert-primary stats" role="alert">' + text + 
