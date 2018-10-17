@@ -159,7 +159,7 @@ function updateLayers(features, reference_features, total_trips) {
     map.getSource('feature_layer').setData(features);
     map.setPaintProperty('feature_layer', 'fill-extrusion-color', getPaint(total_trips));
     showLayer('feature_layer', true);
-    showLayer('reference_layer', false);
+    showLayer('reference_layer', true);
     postTrips(total_trips);
 }
 
