@@ -54,13 +54,17 @@ map.on('load', function() {
     })
 
     map.on('draw.create', function (e) {
+        showLoader();
         var url = getUrl(e, mode);
         getData(url);
+        removeStats();
     });
 
     map.on('draw.update', function (e) {
+        showLoader();
         var url = getUrl(e, mode);
         getData(url);
+        removeStats();
     });
 
     map.on('click', 'feature_layer', function (e) {
@@ -144,7 +148,7 @@ function addFeatures(features, reference_features, total_trips) {
 
         showLayer('feature_layer', true);
         showLayer('reference_layer', true);
-
+        hideLoader();
         postTrips(total_trips);
         first = false;
     } else {
@@ -160,6 +164,7 @@ function updateLayers(features, reference_features, total_trips) {
     map.setPaintProperty('feature_layer', 'fill-extrusion-color', getPaint(total_trips));
     showLayer('feature_layer', true);
     showLayer('reference_layer', true);
+    hideLoader();
     postTrips(total_trips);
 }
 
@@ -237,4 +242,13 @@ function postTrips(total_trips, divId="dataPane") {
 
 function removeStats(selector="stats") {
     $('.' + selector).remove()
+}
+
+function showLoader(divId="dataPane") {
+    var html = '<p class="loader">Loading...</p>';
+    $("#" + divId).append(html);
+}
+
+function hideLoader(divId="dataPane") {
+    $(".loader").remove();
 }
