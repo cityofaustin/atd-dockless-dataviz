@@ -117,8 +117,9 @@ map.on('load', function() {
   
 
 function addFeatures(features, reference_features, total_trips) {
-
+    
     if (first) {
+        var breaks = jenksBreaks(features.features);
 
         map.addLayer({
             'id' : 'feature_layer',
@@ -132,12 +133,16 @@ function addFeatures(features, reference_features, total_trips) {
                 'fill-extrusion-color':[
                     'interpolate',
                     ['linear'],
-                    ['/', ['number', ['get', 'current_count']], total_trips],
-                    0, "#fed976",
-                    .01, "#feb24c",
-                    .04, "#fd8d3c",
-                    .07, "#f03b20",
-                    .1, "#bd0026",
+                    ['number', ['get', 'current_count']],
+                    breaks[1][0]-1, '#ffffcc',
+                    breaks[2][0]-1, '#ffeda0',
+                    breaks[3][0]-1, '#fed976',
+                    breaks[4][0]-1, '#feb24c',
+                    breaks[5][0]-1, '#fd8d3c',
+                    breaks[6][0]-1, '#fc4e2a',
+                    breaks[7][0]-1, '#e31a1c',
+                    breaks[8][0]-1, '#bd0026',
+                    breaks[8][0], '#800026',
                 ],
 
                 'fill-extrusion-height': [
@@ -275,4 +280,8 @@ function showLoader(divId="dataPane") {
 
 function hideLoader(divId="dataPane") {
     $(".loader").remove();
+}
+
+function jenksBreaks(features) {
+    return ss.ckmeans(features.map(f => f.properties.current_count), 9);
 }
