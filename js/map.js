@@ -1,7 +1,3 @@
-// todo
-// deploy api
-// highlight source cells
-
 var API_URL = 'https://dockless-data.austintexas.io/api'
 
 var formatPct = d3.format(".1%");
@@ -181,15 +177,18 @@ function getData(url) {
 }
 
 
-function postCellTripCount(feature) {
+function postCellTripCount(feature, divId="dataPane") {
 
     var trip_percent = feature.properties.current_count / total_trips;
+    
     if (mode == 'origin') {
-        var html = "<p id=cellTripCount >" + feature.properties.current_count + " (" + formatPct(trip_percent) + ") trips originated in the clicked cell.<p>";
+        var text = feature.properties.current_count + " (" + formatPct(trip_percent) + ") trips originated in the clicked cell.";
     } else if (mode == 'destination') {
-        var html = "<p id=cellTripCount >" + feature.properties.current_count + " (" + formatPct(trip_percent) + ") trips terminated in the clicked cell.<p>";
+        var text = feature.properties.current_count + " (" + formatPct(trip_percent) + ") trips terminated in the clicked cell.";
     }
 
+    var html = '<div id="cellTripCount" class="alert alert-dark" role="alert">' + text + 
+    '</div>';
     
     $('#cellTripCount').remove();
     $('#dataPane').append(html);
@@ -222,14 +221,20 @@ function getPaint(total_trips) {
 
 function postTrips(total_trips, divId="dataPane") {
     if (mode == 'origin') {
-        var html = '<h5>' + total_trips + ' trips terminated in the selected area.</h5>'
+        var text = total_trips + ' trips terminated in the selected area.';
     } else if (mode == 'destination') {
-        var html = '<h5>' + total_trips + ' trips originated in the selected area.</h5>'
+        var text = total_trips + ' trips originated in the selected area.';
     }
-    $('#dataPane').html(html);
+
+    var html = '<div id="tripAlert" class="alert alert-primary" role="alert">' + text + 
+    '</div>';
+
+    $("#tripAlert").remove();
+    $("#cellTripCount").remove();
+    $('#' + divId).append(html);
 }
 
 
-function removeStats(divId="dataPane") {
-    $('#dataPane').html('');
+function removeStats(divId="tripAlert") {
+    $('#' + divId).remove();
 }

@@ -1,14 +1,21 @@
-.map-overlay {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  background: rgba(255, 255, 255, 0.8);
-  overflow: auto;
-  border-radius: 3px;
-  width: auto;
+body { margin:0; padding:0; }
+
+#map {
+    position:absolute;
+    top:0;
+    bottom:0;
+    width:100%;
 }
 
+.map-overylay-pane {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 3px;
+}
 
-#title {
-  top: 0;
+.no-pointer-events {
+    pointer-events: none;
+}
+
+.pointer-events {
+    pointer-events: auto;
 }
