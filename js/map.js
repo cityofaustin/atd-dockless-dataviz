@@ -120,7 +120,6 @@ map.on('load', function() {
 function addFeatures(features, reference_features, total_trips) {
     
     if (first) {
-        var breaks = jenksBreaks(features.features);
 
         map.addLayer({
             'id' : 'feature_layer',
@@ -131,20 +130,7 @@ function addFeatures(features, reference_features, total_trips) {
             },
             'layout': {},
             'paint': {
-                'fill-extrusion-color':[
-                    'interpolate',
-                    ['linear'],
-                    ['number', ['get', 'current_count']],
-                    breaks[1][0]-1, '#ffffcc',
-                    breaks[2][0]-1, '#ffeda0',
-                    breaks[3][0]-1, '#fed976',
-                    breaks[4][0]-1, '#feb24c',
-                    breaks[5][0]-1, '#fd8d3c',
-                    breaks[6][0]-1, '#fc4e2a',
-                    breaks[7][0]-1, '#e31a1c',
-                    breaks[8][0]-1, '#bd0026',
-                    breaks[8][0], '#800026',
-                ],
+                'fill-extrusion-color': getPaint(features.features),
 
                 'fill-extrusion-height': [
                     '*', ['number', ['get', 'current_count']], 2
@@ -191,7 +177,7 @@ function addFeatures(features, reference_features, total_trips) {
 function updateLayers(features, reference_features, total_trips) {
     map.getSource('reference_layer').setData(reference_features);
     map.getSource('feature_layer').setData(features);
-    map.setPaintProperty('feature_layer', 'fill-extrusion-color', getPaint(total_trips));
+    map.setPaintProperty('feature_layer', 'fill-extrusion-color', getPaint(features.features));
     showLayer('feature_layer', true);
     showLayer('reference_layer', true);
     hideLoader();
@@ -241,16 +227,21 @@ function showLayer(layer_name, show_layer) {
 }
 
 
-function getPaint(total_trips) {
-    return [
-        'interpolate',
+function getPaint(features) {
+    breaks = jenksBreaks(features);
+
+  return ['interpolate',
         ['linear'],
-        ['/', ['number', ['get', 'current_count']], total_trips],
-        0, "#fed976",
-        .01, "#feb24c",
-        .04, "#fd8d3c",
-        .07, "#f03b20",
-        .1, "#bd0026",
+        ['number', ['get', 'current_count']],
+        breaks[1][0]-1, '#ffffcc',
+        breaks[2][0]-1, '#ffeda0',
+        breaks[3][0]-1, '#fed976',
+        breaks[4][0]-1, '#feb24c',
+        breaks[5][0]-1, '#fd8d3c',
+        breaks[6][0]-1, '#fc4e2a',
+        breaks[7][0]-1, '#e31a1c',
+        breaks[8][0]-1, '#bd0026',
+        breaks[8][0], '#800026',
     ]
 }
 
