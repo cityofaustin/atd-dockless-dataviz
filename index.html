@@ -25,38 +25,34 @@
     </div>
     <div class="container-fluid no-pointer-events">
       <div class="row no-pointer-events justify-content-end">
-        <div class="col-md-3 map-overylay-pane pointer-events mt-2">
+        <div class="col-md-3 map-overylay-pane pointer-events mt-2 mr-2 p-2">
           <div class="row">
             <div class="col">
               <div class="row">
                 <div class="col">
                   <h2 class="">Dockless Data Explorer</h2>
                   <p>City of Austin Transportation Department</p>
+                  <p class="disclaimer text-justify">
+                    <i>
+                      This map has been produced by the City of Austin for the sole purpose of geographic reference. No warranty is made by the City of Austin regarding specific accuracy or completeness.
+                    </i>
+                  </p>
                 </div>
+
               </div>
               <div class="row">
                 <div class="col">
-                  <form id="modeSelector" action="#">
-                    <div class="form-group">
-                      <div class="form-row">
-                        <label for="uom">Mode</label>
-                        <select class="form-control" id="uom">
-                          <option value="origin">Origin</option>
-                          <option value="destination">Destination</option>
-                        </select>
-                        <small class="form-text text-muted">
-                          <b>Orgin</b>: Orign of trips to selected region.
-                        </small>
-                        <small class="form-text text-muted">
-                          <b>Destination</b>: Destination of trips from selected region.
-                        </small>
-                      </div>
-                    </div>
+                  <form class="form-inline" id="modeSelector" action="#">
+                    <label for="uom">Mode</label>
+                    <select class="form-control ml-2" id="uom">
+                      <option value="origin">Origin</option>
+                      <option value="destination">Destination</option>
+                    </select>
                   </form>
                 </div>
               </div>
               <div class="row">
-                <div class="col align-self-center" id="dataPane">
+                <div class="col align-self-center pt-2" id="dataPane">
                   <!-- <p class="loader">Loading...</p> -->
                 </div>
               </div>

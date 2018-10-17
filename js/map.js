@@ -37,7 +37,12 @@ map.addControl(nav, 'top-left');
 
 // add drawing
 var drawOptions = {
-    controls : {trash: false, line_string : false, combine_features: false, uncombine_features: false}
+    controls : {
+        trash: false,
+        line_string : false,
+        combine_features: false,
+        uncombine_features: false
+    }
 }
 
 var Draw = new MapboxDraw(drawOptions);
@@ -47,22 +52,41 @@ map.addControl(Draw, 'top-left');
 // do magic
 map.on('load', function() {
 
+    var url;
+
     mode = $('#modeSelector option:selected').val();
 
     $('#modeSelector').change(function(){
+        var previousMode = mode;
+
         mode = $('#modeSelector option:selected').val();
+
+        if (map.getLayer('feature_layer')) {
+            var visibility = map.getLayoutProperty('feature_layer', 'visibility');    
+        
+            // if showing feature layer, update layer with new mode
+            if (visibility === 'visible') {
+
+                url = url.replace(previousMode, mode)
+                showLoader();
+                getData(url);
+                removeStats();  
+            }
+        }
+
+
     })
 
     map.on('draw.create', function (e) {
         showLoader();
-        var url = getUrl(e, mode);
+        url = getUrl(e.features, mode);
         getData(url);
         removeStats();
     });
 
     map.on('draw.update', function (e) {
         showLoader();
-        var url = getUrl(e, mode);
+        url = getUrl(e.features, mode);
         getData(url);
         removeStats();
     });
@@ -81,10 +105,10 @@ map.on('load', function() {
         map.getCanvas().style.cursor = '';
     });
 
-    function getUrl(e, mode) {
-        var coordinates = e.features[0].geometry.coordinates.toString();
+    function getUrl(features, mode) {
+        var coordinates = features[0].geometry.coordinates.toString();
   
-        url = API_URL + "?xy=" + coordinates + '&mode=' + mode;
+        var url = API_URL + "?xy=" + coordinates + '&mode=' + mode;
         return(url);
 
     }
