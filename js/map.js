@@ -187,7 +187,7 @@ function postCellTripCount(feature, divId="dataPane") {
         var text = feature.properties.current_count + " (" + formatPct(trip_percent) + ") trips terminated in the clicked cell.";
     }
 
-    var html = '<div id="cellTripCount" class="alert alert-dark" role="alert">' + text + 
+    var html = '<div id="cellTripCount" class="alert alert-dark stats" role="alert">' + text + 
     '</div>';
     
     $('#cellTripCount').remove();
@@ -226,7 +226,7 @@ function postTrips(total_trips, divId="dataPane") {
         var text = total_trips + ' trips originated in the selected area.';
     }
 
-    var html = '<div id="tripAlert" class="alert alert-primary" role="alert">' + text + 
+    var html = '<div id="tripAlert" class="alert alert-primary stats" role="alert">' + text + 
     '</div>';
 
     $("#tripAlert").remove();
@@ -235,6 +235,6 @@ function postTrips(total_trips, divId="dataPane") {
 }
 
 
-function removeStats(divId="tripAlert") {
-    $('#' + divId).remove();
+function removeStats(selector="stats") {
+    $('.' + selector).remove()
 }

@@ -7,9 +7,17 @@ body { margin:0; padding:0; }
     width:100%;
 }
 
+#logo {
+    width: 100px;
+    margin-right: 10px;
+    margin-top: 5px;
+}
+
 .map-overylay-pane {
   background: rgba(255, 255, 255, 0.8);
   border-radius: 3px;
+  box-shadow: 0px 1px 2px 0px gray;
+
 }
 
 .no-pointer-events {
