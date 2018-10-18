@@ -1,4 +1,5 @@
-var API_URL = 'https://dockless-data.austintexas.io/api'
+// var API_URL = 'https://dockless-data.austintexas.io/api'
+var API_URL = 'http://18.232.168.251/api'
 
 var formatPct = d3.format(".1%");
 var formatKs = d3.format(",");
@@ -81,6 +82,7 @@ map.on('load', function() {
     map.on('draw.create', function (e) {
         showLoader();
         url = getUrl(e.features, mode);
+        console.log(url);
         getData(url);
         removeStats();
     });
