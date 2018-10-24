@@ -1,4 +1,7 @@
 // var API_URL = 'https://dockless-data.austintexas.io/api'
+
+setHeight("#map-container");
+
 var API_URL = 'http://18.232.168.251/api'
 
 var formatPct = d3.format(".1%");
@@ -278,4 +281,9 @@ function hideLoader(divId="dataPane") {
 
 function jenksBreaks(features) {
     return ss.ckmeans(features.map(f => f.properties.current_count), 9);
+}
+
+function setHeight(selector) {
+  var height = $(window).height(); 
+  $(selector).css("height", height);
 }
