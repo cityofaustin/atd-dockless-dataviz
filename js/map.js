@@ -2,14 +2,14 @@
 
 setHeight("#map-container");
 
-var API_URL = 'http://18.232.168.251/api'
+var API_URL = "http://dockless-data.austintexas.io/v1/trips";
 
 var formatPct = d3.format(".1%");
 var formatKs = d3.format(",");
 
 var total_trips;
 var data;
-var mode;
+var flow;
 var first = true;
 
 // clear map on ESC key press
@@ -59,20 +59,20 @@ map.on('load', function() {
 
     var url;
 
-    mode = $('#modeSelector option:selected').val();
+    flow = $('#flowSelector option:selected').val();
 
-    $('#modeSelector').change(function(){
-        var previousMode = mode;
+    $('#flowSelector').change(function(){
+        var previousFlow = flow;
 
-        mode = $('#modeSelector option:selected').val();
+        flow = $('#flowSelector option:selected').val();
 
         if (map.getLayer('feature_layer')) {
             var visibility = map.getLayoutProperty('feature_layer', 'visibility');    
         
-            // if showing feature layer, update layer with new mode
+            // if showing feature layer, update layer with new flow
             if (visibility === 'visible') {
 
-                url = url.replace(previousMode, mode)
+                url = url.replace(previousFlow, flow)
                 showLoader();
                 getData(url);
                 removeStats();  
@@ -84,7 +84,7 @@ map.on('load', function() {
 
     map.on('draw.create', function (e) {
         showLoader();
-        url = getUrl(e.features, mode);
+        url = getUrl(e.features, flow);
         console.log(url);
         getData(url);
         removeStats();
@@ -92,7 +92,7 @@ map.on('load', function() {
 
     map.on('draw.update', function (e) {
         showLoader();
-        url = getUrl(e.features, mode);
+        url = getUrl(e.features, flow);
         getData(url);
         removeStats();
     });
@@ -111,10 +111,10 @@ map.on('load', function() {
         map.getCanvas().style.cursor = '';
     });
 
-    function getUrl(features, mode) {
+    function getUrl(features, flow) {
         var coordinates = features[0].geometry.coordinates.toString();
   
-        var url = API_URL + "?xy=" + coordinates + '&mode=' + mode;
+        var url = API_URL + "?xy=" + coordinates + '&flow=' + flow;
         return(url);
 
     }
@@ -191,11 +191,8 @@ function updateLayers(features, reference_features, total_trips) {
 
 
 function getData(url) {
-    d3.json(url, {
-        headers : {
-            "Access-Control-Allow-Origin" : 'http://localhost:5000'
-        }
-    }).then(function(json){
+
+    d3.json(url).then(function(json){
         Draw.deleteAll();
         total_trips = json.total_trips;
         addFeatures(json.features, json.intersect_feature, json.total_trips);
@@ -207,9 +204,9 @@ function postCellTripCount(feature, divId="dataPane") {
 
     var trip_percent = feature.properties.current_count / total_trips;
     
-    if (mode == 'origin') {
+    if (flow == 'origin') {
         var text = formatKs(feature.properties.current_count) + " (" + formatPct(trip_percent) + ") trips originated in the clicked cell.";
-    } else if (mode == 'destination') {
+    } else if (flow == 'destination') {
         var text = formatKs(feature.properties.current_count) + " (" + formatPct(trip_percent) + ") trips terminated in the clicked cell.";
     }
 
@@ -251,9 +248,9 @@ function getPaint(features) {
 }
 
 function postTrips(total_trips, divId="dataPane") {
-    if (mode == 'origin') {
+    if (flow == 'origin') {
         var text = formatKs(total_trips) + ' trips terminated in the selected area.';
-    } else if (mode == 'destination') {
+    } else if (flow == 'destination') {
         var text = formatKs(total_trips) + ' trips originated in the selected area.';
     }
 
@@ -264,7 +261,6 @@ function postTrips(total_trips, divId="dataPane") {
     $("#cellTripCount").remove();
     $('#' + divId).append(html);
 }
-
 
 function removeStats(selector="stats") {
     $('.' + selector).remove()
@@ -287,3 +283,4 @@ function setHeight(selector) {
   var height = $(window).height(); 
   $(selector).css("height", height);
 }
+
