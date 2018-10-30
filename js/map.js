@@ -2,7 +2,7 @@
 
 setHeight("#map-container");
 
-var API_URL = "http://dockless-data.austintexas.io/v1/trips";
+var API_URL = "http://localhost:8000/v1/trips";
 
 var formatPct = d3.format(".1%");
 var formatKs = d3.format(",");
@@ -138,10 +138,10 @@ function addFeatures(features, reference_features, total_trips) {
                 'fill-extrusion-color': getPaint(features.features),
 
                 'fill-extrusion-height': [
-                    '*', ['number', ['get', 'current_count']], 2
+                    '*', ['number', ['get', 'current_count']], 1
                 ],
                 'fill-extrusion-base': 0,
-                'fill-extrusion-opacity': .6
+                'fill-extrusion-opacity': .7
             } 
 
         });
@@ -235,17 +235,14 @@ function getPaint(features) {
   return ['interpolate',
         ['linear'],
         ['number', ['get', 'current_count']],
-        breaks[1][0]-1, '#ffffcc',
-        breaks[2][0]-1, '#ffeda0',
-        breaks[3][0]-1, '#fed976',
-        breaks[4][0]-1, '#feb24c',
-        breaks[5][0]-1, '#fd8d3c',
-        breaks[6][0]-1, '#fc4e2a',
-        breaks[7][0]-1, '#e31a1c',
-        breaks[8][0]-1, '#bd0026',
-        breaks[8][0], '#800026',
+        breaks[0][0]-1, '#ffeda0',
+        breaks[1][0]-1, '#fed976',
+        breaks[2][0]-1, '#fd8d3c',
+        breaks[3][0]-1, '#e31a1c',
+        breaks[4][0], '#800026',
     ]
 }
+
 
 function postTrips(total_trips, divId="dataPane") {
     if (flow == 'origin') {
@@ -276,7 +273,7 @@ function hideLoader(divId="dataPane") {
 }
 
 function jenksBreaks(features) {
-    return ss.ckmeans(features.map(f => f.properties.current_count), 9);
+    return ss.ckmeans(features.map(f => f.properties.current_count), 5);
 }
 
 function setHeight(selector) {
