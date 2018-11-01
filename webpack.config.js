@@ -10,9 +10,6 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(["dist"]),
-    new HtmlWebpackPlugin({
-      template: "src/index.html"
-    }),
     new webpack.HotModuleReplacementPlugin()
   ],
   devServer: {
@@ -47,3 +44,11 @@ module.exports = {
     ]
   }
 };
+
+if (process.env.NODE_ENV !== "production") {
+  module.exports.plugins = (module.exports.plugins || []).concat([
+    new HtmlWebpackPlugin({
+      template: "src/index.html"
+    })
+  ]);
+}
