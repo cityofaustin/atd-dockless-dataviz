@@ -9,7 +9,26 @@ import { ckmeans } from "simple-statistics";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import "./style.css";
 
-setHeight("#map-container");
+var map = {
+  init: function() {
+    console.log("initializing");
+    this.options = {
+      test: "mapfoo"
+    };
+    this.$ui = $("#js");
+    this.registerEventHandlers();
+    this.setHeight("#map-container");
+  },
+  registerEventHandlers: function() {
+    console.log("register events");
+  },
+  setHeight: function(selector) {
+    var height = $(window).height();
+    $(selector).css("height", height);
+  }
+};
+
+map.init();
 
 // var API_URL = 'https://dockless-data.austintexas.io/api'
 var API_URL = "http://localhost:8000/v1/trips";
@@ -284,9 +303,4 @@ function hideLoader(divId = "dataPane") {
 
 function jenksBreaks(features) {
   return ckmeans(features.map(f => f.properties.current_count), 5);
-}
-
-function setHeight(selector) {
-  var height = $(window).height();
-  $(selector).css("height", height);
 }
