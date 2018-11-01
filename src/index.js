@@ -9,26 +9,56 @@ import { ckmeans } from "simple-statistics";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import "./style.css";
 
-var map = {
-  init: function() {
+// Locally Scoped Object Module Pattern
+// more info: https://toddmotto.com/mastering-the-module-pattern/#locally-scoped-object-literal
+const ATD_DocklessMap = (function() {
+  // We let this empty object be the placeholder to attach public methods.
+  let docklessMap = {};
+
+  // We attach public methods like this using object literal notation.
+  docklessMap.init = function() {
     console.log("initializing");
     this.options = {
       test: "mapfoo"
     };
     this.$ui = $("#js");
-    this.registerEventHandlers();
-    this.setHeight("#map-container");
-  },
-  registerEventHandlers: function() {
+    registerEventHandlers();
+    setHeight("#map-container");
+  };
+
+  // All methods declared with `const`, must be "private" and are scoped
+  const registerEventHandlers = () => {
     console.log("register events");
-  },
-  setHeight: function(selector) {
+    clearMapOnEscEvent();
+  };
+
+  const setHeight = selector => {
     var height = $(window).height();
     $(selector).css("height", height);
-  }
-};
+  };
 
-map.init();
+  const clearMapOnEscEvent = () => {
+    $(document).keyup(function(e) {
+      if (e.keyCode === 27) {
+        showLayer("feature_layer", false);
+        showLayer("reference_layer", false);
+        removeStats();
+      }
+    });
+  };
+
+  const showLayer = function(layer_name, show_layer) {
+    if (!show_layer) {
+      map.setLayoutProperty(layer_name, "visibility", "none");
+    } else {
+      map.setLayoutProperty(layer_name, "visibility", "visible");
+    }
+  };
+
+  return docklessMap;
+})();
+
+ATD_DocklessMap.init();
 
 // var API_URL = 'https://dockless-data.austintexas.io/api'
 var API_URL = "http://localhost:8000/v1/trips";
@@ -40,15 +70,6 @@ var total_trips;
 var data;
 var flow;
 var first = true;
-
-// clear map on ESC key press
-$(document).keyup(function(e) {
-  if (e.keyCode === 27) {
-    showLayer("feature_layer", false);
-    showLayer("reference_layer", false);
-    removeStats();
-  }
-});
 
 mapboxgl.accessToken =
   "pk.eyJ1Ijoiam9obmNsYXJ5IiwiYSI6ImNqbjhkZ25vcjF2eTMzbG52dGRlbnVqOHAifQ.y1xhnHxbB6KlpQgTp1g1Ow";
@@ -241,6 +262,7 @@ function postCellTripCount(feature, divId = "dataPane") {
   $("#dataPane").append(html);
 }
 
+// todo, move other showLayer calls into module
 const showLayer = (layer_name, show_layer) => {
   if (!show_layer) {
     map.setLayoutProperty(layer_name, "visibility", "none");
