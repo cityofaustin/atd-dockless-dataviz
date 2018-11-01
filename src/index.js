@@ -1,12 +1,12 @@
 import _ from "lodash";
-import $ from 'jQuery';
-import mapboxgl from 'mapbox-gl';
-import MapboxDraw from '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw';
-import { format } from 'd3-format';
-import { json } from 'd3-fetch';
-import {ckmeans} from 'simple-statistics'
+import $ from "jQuery";
+import mapboxgl from "mapbox-gl";
+import MapboxDraw from "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw";
+import { format } from "d3-format";
+import { json } from "d3-fetch";
+import { ckmeans } from "simple-statistics";
 
-import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
+import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import "./style.css";
 
 setHeight("#map-container");
@@ -228,7 +228,7 @@ const showLayer = (layer_name, show_layer) => {
   } else {
     map.setLayoutProperty(layer_name, "visibility", "visible");
   }
-}
+};
 
 function getPaint(features) {
   let breaks = jenksBreaks(features);
