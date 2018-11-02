@@ -1,4 +1,4 @@
-import _ from "lodash";
+// import _ from "lodash"; // not using this right now but maybe we will
 import $ from "jQuery";
 import mapboxgl from "mapbox-gl";
 import MapboxDraw from "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw";
@@ -12,27 +12,30 @@ import "./style.css";
 // Locally Scoped Object Module Pattern
 // more info: https://toddmotto.com/mastering-the-module-pattern/#locally-scoped-object-literal
 const ATD_DocklessMap = (function() {
-  // We let this empty object be the placeholder to attach public methods.
+  // Let this empty object be the placeholder to attach public methods.
   let docklessMap = {};
 
-  // We attach public methods like this using object literal notation.
+  docklessMap.mapOptions = {
+    container: "map",
+    style: "mapbox://styles/mapbox/light-v9",
+    center: [-97.74, 30.275],
+    zoom: 13,
+    minZoom: 1,
+    maxZoom: 19
+  };
+
+  // Attach public methods like this using object literal notation.
   docklessMap.init = function() {
     console.log("initializing");
-    this.options = {
-      test: "mapfoo"
-    };
     this.$ui = $("#js");
-    registerEventHandlers();
+
+    setHeight("#map-container");
     runAppCode();
+    registerEventHandlers();
   };
 
   // TODO: Break this down into smaller pieces
   const runAppCode = () => {
-    setHeight("#map-container");
-
-    // var API_URL = 'https://dockless-data.austintexas.io/api'
-    var API_URL = "http://localhost:8000/v1/trips";
-
     var formatPct = format(".1%");
     var formatKs = format(",");
 
@@ -41,34 +44,17 @@ const ATD_DocklessMap = (function() {
     var flow;
     var first = true;
 
-    // clear map on ESC key press
-    $(document).keyup(function(e) {
-      if (e.keyCode === 27) {
-        showLayer("feature_layer", false);
-        showLayer("reference_layer", false);
-        removeStats();
-      }
-    });
-
+    docklessMap.API_URL = "http://localhost:8000/v1/trips";
     mapboxgl.accessToken =
       "pk.eyJ1Ijoiam9obmNsYXJ5IiwiYSI6ImNqbjhkZ25vcjF2eTMzbG52dGRlbnVqOHAifQ.y1xhnHxbB6KlpQgTp1g1Ow";
+    docklessMap.map = new mapboxgl.Map(docklessMap.mapOptions);
 
-    var mapOptions = {
-      container: "map",
-      style: "mapbox://styles/mapbox/light-v9",
-      center: [-97.74, 30.275],
-      zoom: 13,
-      minZoom: 1,
-      maxZoom: 19
-    };
-
-    // init map
-    var map = new mapboxgl.Map(mapOptions);
+    // map = new mapboxgl.Map(docklessMap.mapOptions);
 
     // add nav
     var nav = new mapboxgl.NavigationControl();
 
-    map.addControl(nav, "top-left");
+    docklessMap.map.addControl(nav, "top-left");
 
     // add drawing
     var drawOptions = {
@@ -82,10 +68,11 @@ const ATD_DocklessMap = (function() {
 
     var Draw = new MapboxDraw(drawOptions);
 
-    map.addControl(Draw, "top-left");
+    docklessMap.map.addControl(Draw, "top-left");
 
     // do magic
-    map.on("load", function() {
+    docklessMap.map.on("load", function() {
+      console.log("do magic");
       var url;
 
       flow = $("#flowSelector option:selected").val();
@@ -95,8 +82,11 @@ const ATD_DocklessMap = (function() {
 
         flow = $("#flowSelector option:selected").val();
 
-        if (map.getLayer("feature_layer")) {
-          var visibility = map.getLayoutProperty("feature_layer", "visibility");
+        if (docklessMap.map.getLayer("feature_layer")) {
+          var visibility = docklessMap.map.getLayoutProperty(
+            "feature_layer",
+            "visibility"
+          );
 
           // if showing feature layer, update layer with new flow
           if (visibility === "visible") {
@@ -108,7 +98,7 @@ const ATD_DocklessMap = (function() {
         }
       });
 
-      map.on("draw.create", function(e) {
+      docklessMap.map.on("draw.create", function(e) {
         showLoader();
         url = getUrl(e.features, flow);
         console.log(url);
@@ -116,38 +106,38 @@ const ATD_DocklessMap = (function() {
         removeStats();
       });
 
-      map.on("draw.update", function(e) {
+      docklessMap.map.on("draw.update", function(e) {
         showLoader();
         url = getUrl(e.features, flow);
         getData(url);
         removeStats();
       });
 
-      map.on("click", "feature_layer", function(e) {
+      docklessMap.map.on("click", "feature_layer", function(e) {
         postCellTripCount(e.features[0]);
       });
 
       // Change the cursor to a pointer when the mouse is over the states layer.
-      map.on("mouseenter", "feature_layer", function() {
-        map.getCanvas().style.cursor = "pointer";
+      docklessMap.map.on("mouseenter", "feature_layer", function() {
+        docklessMap.map.getCanvas().style.cursor = "pointer";
       });
 
       // Change it back to a pointer when it leaves.
-      map.on("mouseleave", "feature_layer", function() {
-        map.getCanvas().style.cursor = "";
+      docklessMap.map.on("mouseleave", "feature_layer", function() {
+        docklessMap.map.getCanvas().style.cursor = "";
       });
 
       function getUrl(features, flow) {
         var coordinates = features[0].geometry.coordinates.toString();
 
-        var url = API_URL + "?xy=" + coordinates + "&flow=" + flow;
+        var url = docklessMap.API_URL + "?xy=" + coordinates + "&flow=" + flow;
         return url;
       }
     });
 
     function addFeatures(features, reference_features, total_trips) {
       if (first) {
-        map.addLayer({
+        docklessMap.map.addLayer({
           id: "feature_layer",
           type: "fill-extrusion",
           source: {
@@ -168,7 +158,7 @@ const ATD_DocklessMap = (function() {
           }
         });
 
-        map.addLayer({
+        docklessMap.map.addLayer({
           id: "reference_layer",
           type: "line",
           source: {
@@ -198,9 +188,9 @@ const ATD_DocklessMap = (function() {
     }
 
     function updateLayers(features, reference_features, total_trips) {
-      map.getSource("reference_layer").setData(reference_features);
-      map.getSource("feature_layer").setData(features);
-      map.setPaintProperty(
+      docklessMap.map.getSource("reference_layer").setData(reference_features);
+      docklessMap.map.getSource("feature_layer").setData(features);
+      docklessMap.map.setPaintProperty(
         "feature_layer",
         "fill-extrusion-color",
         getPaint(features.features)
@@ -247,9 +237,9 @@ const ATD_DocklessMap = (function() {
 
     const showLayer = (layer_name, show_layer) => {
       if (!show_layer) {
-        map.setLayoutProperty(layer_name, "visibility", "none");
+        docklessMap.map.setLayoutProperty(layer_name, "visibility", "none");
       } else {
-        map.setLayoutProperty(layer_name, "visibility", "visible");
+        docklessMap.map.setLayoutProperty(layer_name, "visibility", "visible");
       }
     };
 
@@ -292,10 +282,6 @@ const ATD_DocklessMap = (function() {
       $("#" + divId).append(html);
     }
 
-    function removeStats(selector = "stats") {
-      $("." + selector).remove();
-    }
-
     function showLoader(divId = "dataPane") {
       var html = '<p class="loader">Loading...</p>';
       $("#" + divId).append(html);
@@ -308,16 +294,39 @@ const ATD_DocklessMap = (function() {
     function jenksBreaks(features) {
       return ckmeans(features.map(f => f.properties.current_count), 5);
     }
-
-    function setHeight(selector) {
-      var height = $(window).height();
-      $(selector).css("height", height);
-    }
   };
 
   // All methods declared with `const`, must be "private" and are scoped
   const registerEventHandlers = () => {
-    console.log("register events");
+    console.log("registering events");
+    clearMapOnEscEvent();
+  };
+
+  const setHeight = selector => {
+    var height = $(window).height();
+    $(selector).css("height", height);
+  };
+
+  const clearMapOnEscEvent = () => {
+    $(document).keyup(function(e) {
+      if (e.keyCode === 27) {
+        showLayer("feature_layer", false);
+        showLayer("reference_layer", false);
+        removeStats();
+      }
+    });
+  };
+
+  const showLayer = (layer_name, show_layer) => {
+    if (!show_layer) {
+      docklessMap.map.setLayoutProperty(layer_name, "visibility", "none");
+    } else {
+      docklessMap.map.setLayoutProperty(layer_name, "visibility", "visible");
+    }
+  };
+
+  const removeStats = (selector = "stats") => {
+    $("." + selector).remove();
   };
 
   return docklessMap;
