@@ -30,30 +30,19 @@ const ATD_DocklessMap = (function() {
     this.$ui = $("#js");
 
     setHeight("#map-container");
+    initalizeMap();
     runAppCode();
     registerEventHandlers();
   };
 
-  // TODO: Break this down into smaller pieces
-  const runAppCode = () => {
-    var formatPct = format(".1%");
-    var formatKs = format(",");
-
-    var total_trips;
-    var data;
-    var flow;
-    var first = true;
-
+  const initalizeMap = () => {
     docklessMap.API_URL = "http://localhost:8000/v1/trips";
     mapboxgl.accessToken =
       "pk.eyJ1Ijoiam9obmNsYXJ5IiwiYSI6ImNqbjhkZ25vcjF2eTMzbG52dGRlbnVqOHAifQ.y1xhnHxbB6KlpQgTp1g1Ow";
     docklessMap.map = new mapboxgl.Map(docklessMap.mapOptions);
 
-    // map = new mapboxgl.Map(docklessMap.mapOptions);
-
     // add nav
     var nav = new mapboxgl.NavigationControl();
-
     docklessMap.map.addControl(nav, "top-left");
 
     // add drawing
@@ -65,10 +54,19 @@ const ATD_DocklessMap = (function() {
         uncombine_features: false
       }
     };
+    docklessMap.Draw = new MapboxDraw(drawOptions);
+    docklessMap.map.addControl(docklessMap.Draw, "top-left");
+  };
 
-    var Draw = new MapboxDraw(drawOptions);
+  // TODO: Break this down into smaller pieces
+  const runAppCode = () => {
+    var formatPct = format(".1%");
+    var formatKs = format(",");
 
-    docklessMap.map.addControl(Draw, "top-left");
+    var total_trips;
+    var data;
+    var flow;
+    var first = true;
 
     // do magic
     docklessMap.map.on("load", function() {
@@ -203,7 +201,7 @@ const ATD_DocklessMap = (function() {
 
     function getData(url) {
       json(url).then(function(json) {
-        Draw.deleteAll();
+        docklessMap.Draw.deleteAll();
         total_trips = json.total_trips;
         addFeatures(json.features, json.intersect_feature, json.total_trips);
       });
