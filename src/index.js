@@ -25,19 +25,20 @@ const ATD_DocklessMap = (function() {
     },
     Draw: "",
     flow: "",
+    mode: "",
     url: "",
     API_URL: "http://localhost:8000/v1/trips",
     total_trips: "",
     first: true,
     formatPct: format(".1%"),
     formatKs: format(",")
-    // data: ""
   };
 
   // Attach public methods like this using object literal notation.
   docklessMap.init = function() {
     console.log("initializing");
-    this.$ui = $("#js");
+    this.$uiMap = $("#map");
+    this.$uiOverlayPane = $(".map-overylay-pane");
 
     setHeight("#map-container");
     initalizeMap();
@@ -67,24 +68,40 @@ const ATD_DocklessMap = (function() {
     docklessMap.map.addControl(docklessMap.Draw, "top-left");
   };
 
-  const handleFlowSelect = () => {
-    $("#flowSelector").change(function() {
-      var previousFlow = docklessMap.flow;
+  const handleSelectChanges = () => {
+    const $dataSelectForm = docklessMap.$uiOverlayPane.find(
+      "#data-select-form"
+    );
 
-      docklessMap.flow = $("#flowSelector option:selected").val();
+    $dataSelectForm.change(function() {
+      const previousFlow = docklessMap.flow;
+      const previousMode = docklessMap.mode;
+
+      docklessMap.flow = $dataSelectForm
+        .find("#flow-select option:selected")
+        .val();
+
+      docklessMap.mode = $dataSelectForm
+        .find("#mode-select option:selected")
+        .val();
 
       if (docklessMap.map.getLayer("feature_layer")) {
-        var visibility = docklessMap.map.getLayoutProperty(
+        let visibility = docklessMap.map.getLayoutProperty(
           "feature_layer",
           "visibility"
         );
 
-        // if showing feature layer, update layer with new flow
+        // if showing feature layer, update layer with new flow & mode
         if (visibility === "visible") {
           docklessMap.url = docklessMap.url.replace(
             previousFlow,
             docklessMap.flow
           );
+          docklessMap.url = docklessMap.url.replace(
+            previousMode,
+            docklessMap.mode
+          );
+          console.log(docklessMap.url);
           showLoader();
           getData(docklessMap.url);
           removeStats();
@@ -95,18 +112,20 @@ const ATD_DocklessMap = (function() {
 
   // TODO: Break this down into smaller pieces
   const runAppCode = () => {
-    var data;
-
     // do magic
     docklessMap.map.on("load", function() {
       console.log("do magic");
-      docklessMap.flow = $("#flowSelector option:selected").val();
 
-      handleFlowSelect();
+      initializeDataFilters();
+      handleSelectChanges();
 
       docklessMap.map.on("draw.create", function(e) {
         showLoader();
-        docklessMap.url = getUrl(e.features, docklessMap.flow);
+        docklessMap.url = getUrl(
+          e.features,
+          docklessMap.flow,
+          docklessMap.mode
+        );
         console.log(docklessMap.url);
         getData(docklessMap.url);
         removeStats();
@@ -114,7 +133,11 @@ const ATD_DocklessMap = (function() {
 
       docklessMap.map.on("draw.update", function(e) {
         showLoader();
-        docklessMap.url = getUrl(e.features, docklessMap.flow);
+        docklessMap.url = getUrl(
+          e.features,
+          docklessMap.flow,
+          docklessMap.mode
+        );
         getData(docklessMap.url);
         removeStats();
       });
@@ -133,13 +156,6 @@ const ATD_DocklessMap = (function() {
         docklessMap.map.getCanvas().style.cursor = "";
       });
     });
-
-    function getUrl(features, flow) {
-      var coordinates = features[0].geometry.coordinates.toString();
-
-      var url = docklessMap.API_URL + "?xy=" + coordinates + "&flow=" + flow;
-      return url;
-    }
 
     function postCellTripCount(feature, divId = "dataPane") {
       var trip_percent =
@@ -183,6 +199,14 @@ const ATD_DocklessMap = (function() {
     clearMapOnEscEvent();
   };
 
+  const getUrl = (features, flow, mode) => {
+    const coordinates = features[0].geometry.coordinates.toString();
+    const url = `${
+      docklessMap.API_URL
+    }?xy=${coordinates}&flow=${flow}&mode=${mode}`;
+    return url;
+  };
+
   const showLoader = (divId = "dataPane") => {
     var html = '<p class="loader">Loading...</p>';
     $("#" + divId).append(html);
@@ -190,6 +214,14 @@ const ATD_DocklessMap = (function() {
 
   const hideLoader = (divId = "dataPane") => {
     $(".loader").remove();
+  };
+
+  const initializeDataFilters = () => {
+    const $flowSelect = docklessMap.$uiOverlayPane.find("#flow-select");
+    const $modeSelect = docklessMap.$uiOverlayPane.find("#mode-select");
+
+    docklessMap.flow = $flowSelect.find("option:selected").val();
+    docklessMap.mode = $modeSelect.find("option:selected").val();
   };
 
   const getData = url => {

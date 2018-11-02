@@ -24,20 +24,20 @@
               </p>
             </div>
           </div>
-            <form id="flowSelector" action="#">
+            <form id="data-select-form" action="#">
               <div class="form-group row">
-                <label for="uom" class="col-sm-3 col-form-label">Flow</label>
+                <label for="flow-select" class="col-sm-3 col-form-label">Flow</label>
                 <div class="col-sm-9">
-                  <select class="form-control" id="uom">
+                  <select class="form-control js-flow-select" id="flow-select">
                     <option value="origin">Origin</option>
                     <option value="destination">Destination</option>
                   </select>
                 </div>
               </div>
               <div class="form-group row">
-                <label for="mode" class="col-sm-3 col-form-label">Mode</label>
+                <label for="mode-select" class="col-sm-3 col-form-label">Mode</label>
                 <div class="col-sm-9">
-                  <select class="form-control" id="mode">
+                  <select class="form-control js-mode-select" id="mode-select">
                     <option value="all">All</option>
                     <option value="scooter">Scooter</option>
                     <option value="bicycle">Bicycle</option>
@@ -46,7 +46,6 @@
               </div>
             </form>
           <div class="col align-self-center pt-2" id="dataPane">
-              <!-- <p class="loader">Loading...</p> -->
           </div>
         </div>
       </div>
