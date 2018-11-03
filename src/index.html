@@ -24,24 +24,31 @@
               </p>
             </div>
           </div>
-          <div class="row">
-            <div class="col-lg-12">
-              <form class="form-inline" id="flowSelector" action="#">
-                <label for="uom">Flow</label>
-                <select class="form-control ml-2" id="uom">
-                  <option value="origin">Origin</option>
-                  <option value="destination">Destination</option>
-                </select>
-              </form>
-            </div>
-          </div>
+            <form id="data-select-form" action="#">
+              <div class="form-group row">
+                <label for="flow-select" class="col-sm-3 col-form-label">Flow</label>
+                <div class="col-sm-9">
+                  <select class="form-control js-flow-select" id="flow-select">
+                    <option value="origin">Origin</option>
+                    <option value="destination">Destination</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row">
+                <label for="mode-select" class="col-sm-3 col-form-label">Mode</label>
+                <div class="col-sm-9">
+                  <select class="form-control js-mode-select" id="mode-select">
+                    <option value="all">All</option>
+                    <option value="scooter">Scooter</option>
+                    <option value="bicycle">Bicycle</option>
+                  </select>
+                </div>
+              </div>
+            </form>
           <div class="col align-self-center pt-2" id="dataPane">
-              <!-- <p class="loader">Loading...</p> -->
           </div>
         </div>
       </div>
     </div>
-    <script src="./app.bundle.js"></script>
-
   </body>
 </html>
