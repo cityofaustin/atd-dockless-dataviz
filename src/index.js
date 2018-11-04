@@ -38,7 +38,7 @@ const ATD_DocklessMap = (function() {
   docklessMap.init = function() {
     console.log("initializing");
     this.$uiMap = $("#map");
-    this.$uiOverlayPane = $(".map-overylay-pane");
+    this.$uiOverlayPane = $(".map-overlay-pane");
 
     setHeight("#map-container");
     initalizeMap();
@@ -197,6 +197,14 @@ const ATD_DocklessMap = (function() {
   const registerEventHandlers = () => {
     console.log("registering events");
     clearMapOnEscEvent();
+
+    $(".js-close-pane").on("click", e => {
+      closeSlidingPane();
+    });
+
+    $(".js-open-pane").on("click", e => {
+      openSlidingPane();
+    });
   };
 
   const getUrl = (features, flow, mode) => {
@@ -368,6 +376,16 @@ const ATD_DocklessMap = (function() {
     $("#tripAlert").remove();
     $("#cellTripCount").remove();
     $("#" + divId).append(html);
+  };
+
+  const openSlidingPane = () => {
+    $(".js-sliding-pane").removeClass("map-overlay-pane--collapsed");
+    $(".js-sliding-pane").addClass("map-overlay-pane--expanded");
+  };
+
+  const closeSlidingPane = () => {
+    $(".js-sliding-pane").removeClass("map-overlay-pane--expanded");
+    $(".js-sliding-pane").addClass("map-overlay-pane--collapsed");
   };
 
   return docklessMap;

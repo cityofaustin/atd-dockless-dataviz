@@ -4,19 +4,69 @@
   height: 100%;
 }
 
-.map-overylay-pane {
+/* small device */
+.map-overlay-pane {
   background: rgba(255, 255, 255, 0.8);
-  border-radius: 3px;
   box-shadow: 0px 1px 2px 0px gray;
   top: 0;
-  right: 0;
   height: 100%;
   position: fixed;
+  z-index: 3;
+}
+
+.map-overlay-pane--collapsed {
+  animation: slideOut 0.5s ease-in-out both;
+}
+
+.map-overlay-pane--expanded {
+  animation: slideIn 0.5s ease-in-out both;
+}
+
+@keyframes slideIn {
+  0% {
+    left: 100%;
+  }
+  100% {
+    left: 0;
+  }
+}
+@keyframes slideOut {
+  0% {
+    left: 0;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* tablet and up */
+@media (min-width: 576px) {
+  .map-overlay-pane {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 3px;
+    box-shadow: 0px 1px 2px 0px gray;
+    top: 0;
+    right: 0;
+    height: 100%;
+    position: fixed;
+    animation: none;
+  }
+}
+
+.open-pane-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+}
+
+.close-pane-btn {
+  float: right;
 }
 
 .disclaimer {
-    color: gray;
-    font-size: .6em;
+  color: gray;
+  font-size: 0.6em;
 }
 
 /* Spinner */
@@ -33,9 +83,9 @@
   font-size: 10px;
   position: relative;
   text-indent: -9999em;
-  border-top: 1.1em solid rgba(67,148,218, 0.2);
-  border-right: 1.1em solid rgba(67,148,218, 0.2);
-  border-bottom: 1.1em solid rgba(67,148,218, 0.2);
+  border-top: 1.1em solid rgba(67, 148, 218, 0.2);
+  border-right: 1.1em solid rgba(67, 148, 218, 0.2);
+  border-bottom: 1.1em solid rgba(67, 148, 218, 0.2);
   border-left: 1.1em solid #4394da;
   -webkit-transform: translateZ(0);
   -ms-transform: translateZ(0);
