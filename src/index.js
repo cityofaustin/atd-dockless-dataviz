@@ -31,7 +31,8 @@ const ATD_DocklessMap = (function() {
     total_trips: "",
     first: true,
     formatPct: format(".1%"),
-    formatKs: format(",")
+    formatKs: format(","),
+    numClasses: 5
   };
 
   // Attach public methods like this using object literal notation.
@@ -326,8 +327,22 @@ const ATD_DocklessMap = (function() {
   };
 
   const getPaint = features => {
-    let breaks = jenksBreaks(features);
 
+    if (features.length <= docklessMap.numClasses) {
+      // paint everything the same color when there are few features to style
+      return "#ffeda0";
+    }
+
+    let counts = features.map(f => f.properties.current_count);
+    
+    if (Math.max(...counts) - Math.min(...counts) < docklessMap.numClasses) {
+      // paint everything the same color when the range of trip counts is small
+      return "#ffeda0";
+    }
+
+    let breaks = jenksBreaks(counts, docklessMap.numClasses);
+
+    // color ramps courtesy of ColorBrewer (http://colorbrewer2.org)
     return [
       "interpolate",
       ["linear"],
@@ -345,8 +360,8 @@ const ATD_DocklessMap = (function() {
     ];
   };
 
-  const jenksBreaks = features => {
-    return ckmeans(features.map(f => f.properties.current_count), 5);
+  const jenksBreaks = (counts, numClasses) => {
+    return ckmeans(counts, numClasses);
   };
 
   const postTrips = (total_trips, divId = "dataPane") => {
