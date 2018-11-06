@@ -9,6 +9,14 @@ import { ckmeans } from "simple-statistics";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import "./style.css";
 
+// import favicons for webpack
+function importAll(r) {
+  return r.keys().map(r);
+}
+const favicons = importAll(
+  require.context("./assets/images", false, /\.(png|jpe?g|svg)$/)
+);
+
 // Locally Scoped Object Module Pattern
 // more info: https://toddmotto.com/mastering-the-module-pattern/#locally-scoped-object-literal
 const ATD_DocklessMap = (function() {
@@ -335,14 +343,13 @@ const ATD_DocklessMap = (function() {
   };
 
   const getPaint = features => {
-
     if (features.length <= docklessMap.numClasses) {
       // paint everything the same color when there are few features to style
       return "#ffeda0";
     }
 
     let counts = features.map(f => f.properties.current_count);
-    
+
     if (Math.max(...counts) - Math.min(...counts) < docklessMap.numClasses) {
       // paint everything the same color when the range of trip counts is small
       return "#ffeda0";
