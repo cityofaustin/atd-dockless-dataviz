@@ -10,6 +10,8 @@ import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import "./style.css";
 
 // import favicons for webpack
+import "./assets/images/favicon.ico";
+import "./assets/images/manifest.json";
 function importAll(r) {
   return r.keys().map(r);
 }
