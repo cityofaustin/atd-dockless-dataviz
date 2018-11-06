@@ -1,5 +1,5 @@
 // import _ from "lodash"; // not using this right now but maybe we will
-import $ from "jquery";
+import $ from "jquery-slim";
 import mapboxgl from "mapbox-gl";
 import MapboxDraw from "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw";
 import { format } from "d3-format";
