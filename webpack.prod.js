@@ -1,6 +1,7 @@
 const merge = require("webpack-merge");
 const common = require("./webpack.common.js");
 const HtmlCriticalWebpackPlugin = require("html-critical-webpack-plugin");
+const path = require("path");
 
 module.exports = merge(common, {
   mode: "production",
@@ -9,6 +10,7 @@ module.exports = merge(common, {
       base: path.resolve(__dirname, "dist"),
       src: "index.html",
       dest: "index.html",
+      css: "./src/style.css",
       inline: true,
       minify: true,
       extract: true,
