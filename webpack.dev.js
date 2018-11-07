@@ -10,13 +10,10 @@ module.exports = merge(common, {
     contentBase: "./dist",
     hot: true
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()]
-});
-
-if (process.env.NODE_ENV !== "production") {
-  module.exports.plugins = (module.exports.plugins || []).concat([
-    new HtmlWebpackPlugin({
-      template: "./src/index.html"
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.DefinePlugin({
+      API_URL: JSON.stringify("http://localhost:8000/v1/trips")
     })
-  ]);
-}
+  ]
+});

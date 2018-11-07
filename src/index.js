@@ -35,7 +35,6 @@ const ATD_DocklessMap = (function() {
     flow: "",
     mode: "",
     url: "",
-    API_URL: "http://localhost:8000/v1/trips",
     total_trips: "",
     first: true,
     formatPct: format(".1%"),
@@ -218,9 +217,7 @@ const ATD_DocklessMap = (function() {
 
   const getUrl = (features, flow, mode) => {
     const coordinates = features[0].geometry.coordinates.toString();
-    const url = `${
-      docklessMap.API_URL
-    }?xy=${coordinates}&flow=${flow}&mode=${mode}`;
+    const url = `${API_URL}?xy=${coordinates}&flow=${flow}&mode=${mode}`;
     return url;
   };
 
