@@ -239,7 +239,7 @@ const ATD_DocklessMap = (function() {
   };
 
   const getData = url => {
-    json(url).then(function(json) {
+    json(url, { mode: "cors" }).then(function(json) {
       docklessMap.Draw.deleteAll();
       docklessMap.total_trips = json.total_trips;
       addFeatures(json.features, json.intersect_feature, json.total_trips);
