@@ -1,4 +1,5 @@
-import $ from "jquery-slim";
+import "jquery";
+import "bootstrap/dist/js/bootstrap";
 import mapboxgl from "mapbox-gl";
 import MapboxDraw from "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw";
 import { format } from "d3-format";
