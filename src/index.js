@@ -240,11 +240,21 @@ const ATD_DocklessMap = (function() {
   };
 
   const getData = url => {
-    json(url, { mode: "cors" }).then(function(json) {
-      docklessMap.Draw.deleteAll();
-      docklessMap.total_trips = json.total_trips;
-      addFeatures(json.features, json.intersect_feature, json.total_trips);
-    });
+    json(url, { mode: "no-cors" })
+      .then(json => {
+        docklessMap.Draw.deleteAll();
+        docklessMap.total_trips = json.total_trips;
+        addFeatures(json.features, json.intersect_feature, json.total_trips);
+      })
+      .catch(error => {
+        $("#errorModal").modal("show");
+        $("#errorModal .modal-body").html(`
+          <p>It seems that we're having trouble getting data from our server at this point in time.</p>
+          <p>Please try to refresh this page and try again.</p>
+          <p>If the problem persists, please <a href="mailto:ATDDataTechnologyServices@austintexas.gov?subject=Bug Report: Dockless Data Explorer">email us</a> or <a href="https://github.com/cityofaustin/dockless/issues/new">create a new issue</a> on our Github repo.</p>
+          <h5>Error Message:</h5><code>${error}</code>
+        `);
+      });
   };
 
   const setHeight = selector => {
