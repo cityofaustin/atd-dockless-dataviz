@@ -4,6 +4,10 @@
   height: 100%;
 }
 
+#map-container {
+  height: 100vh;
+}
+
 /* small device */
 .map-overlay-pane {
   background: rgba(255, 255, 255, 0.8);

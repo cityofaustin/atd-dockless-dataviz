@@ -49,7 +49,6 @@ const ATD_DocklessMap = (function() {
     this.$uiMap = $("#map");
     this.$uiOverlayPane = $(".map-overlay-pane");
 
-    setHeight("#map-container");
     initalizeMap();
     runAppCode();
     registerEventHandlers();
@@ -255,11 +254,6 @@ const ATD_DocklessMap = (function() {
           <h5>Error Message:</h5><code>${error}</code>
         `);
       });
-  };
-
-  const setHeight = selector => {
-    var height = $(window).height();
-    $(selector).css("height", height);
   };
 
   const clearMapOnEscEvent = () => {
