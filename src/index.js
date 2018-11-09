@@ -214,6 +214,25 @@ const ATD_DocklessMap = (function() {
       openSlidingPane();
     });
 
+    handleMapResizeOnWindowChange();
+  };
+
+  const getUrl = (features, flow, mode) => {
+    const coordinates = features[0].geometry.coordinates.toString();
+    const url = `${API_URL}?xy=${coordinates}&flow=${flow}&mode=${mode}`;
+    return url;
+  };
+
+  const showLoader = (divId = "dataPane") => {
+    var html = '<p class="loader">Loading...</p>';
+    $("#" + divId).append(html);
+  };
+
+  const hideLoader = (divId = "dataPane") => {
+    $(".loader").remove();
+  };
+
+  const handleMapResizeOnWindowChange = () => {
     (function($, sr) {
       // debouncing function from John Hann
       // http://unscriptable.com/index.php/2009/03/20/debouncing-javascript-methods/
@@ -240,24 +259,9 @@ const ATD_DocklessMap = (function() {
       };
     })(jQuery, "smartresize");
 
-    $(window).smartresize(function() {
+    $(window).smartresize(() => {
       docklessMap.map.resize();
     });
-  };
-
-  const getUrl = (features, flow, mode) => {
-    const coordinates = features[0].geometry.coordinates.toString();
-    const url = `${API_URL}?xy=${coordinates}&flow=${flow}&mode=${mode}`;
-    return url;
-  };
-
-  const showLoader = (divId = "dataPane") => {
-    var html = '<p class="loader">Loading...</p>';
-    $("#" + divId).append(html);
-  };
-
-  const hideLoader = (divId = "dataPane") => {
-    $(".loader").remove();
   };
 
   const initializeDataFilters = () => {
