@@ -1,5 +1,6 @@
 const merge = require("webpack-merge");
 const common = require("./webpack.common.js");
+const webpack = require("webpack");
 const HtmlCriticalWebpackPlugin = require("html-critical-webpack-plugin");
 const path = require("path");
 
@@ -19,6 +20,9 @@ module.exports = merge(common, {
       penthouse: {
         blockJSRequests: false
       }
+    }),
+    new webpack.DefinePlugin({
+      API_URL: JSON.stringify("https://dockless-data.austintexas.io/v1/trips")
     })
   ]
 });
