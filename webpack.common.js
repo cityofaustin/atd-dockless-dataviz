@@ -1,25 +1,17 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
-const webpack = require("webpack");
 
 module.exports = {
-  mode: "development",
   entry: {
     app: "./src/index.js"
   },
   plugins: [
     new CleanWebpackPlugin(["dist"]),
-    new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       template: "./src/index.html"
     })
   ],
-  devServer: {
-    contentBase: "./dist",
-    hot: true
-  },
-  devtool: "inline-source-map",
   output: {
     filename: "[name].bundle.js",
     path: path.resolve(__dirname, "dist")
@@ -51,11 +43,3 @@ module.exports = {
     ]
   }
 };
-
-if (process.env.NODE_ENV !== "production") {
-  module.exports.plugins = (module.exports.plugins || []).concat([
-    new HtmlWebpackPlugin({
-      template: "./src/index.html"
-    })
-  ]);
-}
