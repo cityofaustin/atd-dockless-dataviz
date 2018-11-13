@@ -57,6 +57,11 @@ const ATD_DocklessMap = (function() {
   const initalizeMap = () => {
     mapboxgl.accessToken =
       "pk.eyJ1Ijoiam9obmNsYXJ5IiwiYSI6ImNqbjhkZ25vcjF2eTMzbG52dGRlbnVqOHAifQ.y1xhnHxbB6KlpQgTp1g1Ow";
+
+    if (!mapboxgl.supported()) {
+      alert("Your browser does not support Mapbox GL");
+    }
+
     docklessMap.map = new mapboxgl.Map(docklessMap.mapOptions);
 
     // add nav
