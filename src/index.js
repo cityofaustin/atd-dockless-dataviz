@@ -6,6 +6,8 @@ import { format } from "d3-format";
 import { json } from "d3-fetch";
 import { ckmeans } from "simple-statistics";
 
+import "mapbox-gl/dist/mapbox-gl.css";
+import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import "./style.css";
 
 // import favicons for webpack
