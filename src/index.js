@@ -69,6 +69,13 @@ const ATD_DocklessMap = (function() {
       alert(
         "This map is designed for modern browsers. Please use a recent version of Firefox, Chrome, Safari, or Edge to view this site."
       );
+
+      $("#errorModal").modal("show");
+      $("#errorModal .modal-title").html(`Browser Error`);
+      $("#errorModal .modal-body").html(`
+        <h4>Incompatible Browser</h4>
+        <p>This map is designed for modern browsers. Please use a recent version of Firefox, Chrome, Safari, or Edge to view this site.</p>
+      `);
     }
 
     docklessMap.map = new mapboxgl.Map(docklessMap.mapOptions);
