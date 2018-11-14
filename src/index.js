@@ -297,7 +297,6 @@ const ATD_DocklessMap = (function() {
     axios
       .get(url)
       .then(response => {
-        debugger;
         const { features, intersect_feature, total_trips } = response.data;
         docklessMap.Draw.deleteAll();
         docklessMap.total_trips = total_trips;
