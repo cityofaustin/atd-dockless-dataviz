@@ -61,7 +61,9 @@ const ATD_DocklessMap = (function() {
       "pk.eyJ1Ijoiam9obmNsYXJ5IiwiYSI6ImNqbjhkZ25vcjF2eTMzbG52dGRlbnVqOHAifQ.y1xhnHxbB6KlpQgTp1g1Ow";
 
     if (!mapboxgl.supported()) {
-      alert("Your browser does not support Mapbox GL");
+      alert(
+        "This map is designed for modern browsers. Please use a recent version of Firefox, Chrome, Safari, or Edge to view this site."
+      );
     }
 
     docklessMap.map = new mapboxgl.Map(docklessMap.mapOptions);
