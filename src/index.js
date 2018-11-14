@@ -70,11 +70,11 @@ const ATD_DocklessMap = (function() {
         "This map is designed for modern browsers. Please use a recent version of Firefox, Chrome, Safari, or Edge to view this site."
       );
 
-      $("#errorModal").modal("show");
-      $("#errorModal .modal-title").html(`Browser Error`);
-      $("#errorModal .modal-body").html(`
-        <h4>Incompatible Browser</h4>
-        <p>This map is designed for modern browsers. Please use a recent version of Firefox, Chrome, Safari, or Edge to view this site.</p>
+      $("map-overlay-pane").append(`
+        <div class="alert alert-danger">
+          <h4>Incompatible Browser</h4>
+          <p>This map is designed for modern browsers. Please use a recent version of Firefox, Chrome, Safari, or Edge to view this site.</p>
+        </div>
       `);
     }
 
