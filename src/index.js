@@ -3,7 +3,7 @@ import "bootstrap/dist/js/bootstrap";
 import mapboxgl from "mapbox-gl";
 import MapboxDraw from "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw";
 import { format } from "d3-format";
-import { json } from "d3-fetch";
+import axios from "axios";
 import { ckmeans } from "simple-statistics";
 
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -280,11 +280,14 @@ const ATD_DocklessMap = (function() {
   };
 
   const getData = url => {
-    json(url)
-      .then(json => {
+    axios
+      .get(url)
+      .then(response => {
+        debugger;
+        const { features, intersect_feature, total_trips } = response.data;
         docklessMap.Draw.deleteAll();
-        docklessMap.total_trips = json.total_trips;
-        addFeatures(json.features, json.intersect_feature, json.total_trips);
+        docklessMap.total_trips = total_trips;
+        addFeatures(features, intersect_feature, total_trips);
       })
       .catch(error => {
         $("#errorModal").modal("show");
