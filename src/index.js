@@ -70,7 +70,7 @@ const ATD_DocklessMap = (function() {
         "This map is designed for modern browsers. Please use a recent version of Firefox, Chrome, Safari, or Edge to view this site."
       );
 
-      $("map-overlay-pane").append(`
+      $(".map-overlay-pane").html(`
         <div class="alert alert-danger">
           <h4>Incompatible Browser</h4>
           <p>This map is designed for modern browsers. Please use a recent version of Firefox, Chrome, Safari, or Edge to view this site.</p>
