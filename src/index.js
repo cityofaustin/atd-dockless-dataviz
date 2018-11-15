@@ -96,6 +96,7 @@ const ATD_DocklessMap = (function() {
     };
     docklessMap.Draw = new MapboxDraw(drawOptions);
     docklessMap.map.addControl(docklessMap.Draw, "top-left");
+    $("#map-container").css("height", window.innerHeight);
   };
 
   // TODO: Break this down into smaller pieces
@@ -252,6 +253,7 @@ const ATD_DocklessMap = (function() {
 
     $(window).smartresize(() => {
       docklessMap.map.resize();
+      $("#map-container").css("height", window.innerHeight);
     });
   };
 
