@@ -10,6 +10,7 @@ import { ckmeans } from "simple-statistics";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
 import "./style.css";
+import "../node_modules/@fortawesome/fontawesome-free/js/all.min.js";
 
 // Promise polyfill for IE 11
 // https://stackoverflow.com/questions/42533264/getting-error-promise-is-undefined-in-ie11
