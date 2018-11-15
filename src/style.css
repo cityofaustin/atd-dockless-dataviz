@@ -73,6 +73,14 @@
   font-size: 0.6em;
 }
 
+.trip-stats-container--mobile {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 1rem;
+}
+
 /* Spinner */
 /*https://projects.lukehaas.me/css-loaders/*/
 .loader,
