@@ -66,9 +66,10 @@
 
 .reset-map-btn {
   position: absolute;
-  top: 100px;
+  top: 110px;
   left: 10px;
   z-index: 1;
+  padding: 4px 9px;
 }
 
 .close-pane-btn {
