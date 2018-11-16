@@ -41,6 +41,7 @@ const ATD_DocklessMap = (function() {
       maxZoom: 19
     },
     Draw: "",
+    isDrawControlActive: true,
     flow: "",
     mode: "",
     url: "",
@@ -270,7 +271,7 @@ const ATD_DocklessMap = (function() {
       "#data-select-form"
     );
 
-    $dataSelectForm.change(function() {
+    $dataSelectForm.change(() => {
       const previousFlow = docklessMap.flow;
       const previousMode = docklessMap.mode;
 
@@ -312,11 +313,14 @@ const ATD_DocklessMap = (function() {
       .get(url)
       .then(response => {
         const { features, intersect_feature, total_trips } = response.data;
-        docklessMap.Draw.deleteAll();
+        if (docklessMap.isDrawControlActive) {
+          docklessMap.Draw.deleteAll();
+          docklessMap.map.removeControl(docklessMap.Draw);
+          docklessMap.isDrawControlActive = false;
+          $("#js-reset-map").removeClass("d-none");
+        }
         docklessMap.total_trips = total_trips;
         addFeatures(features, intersect_feature, total_trips);
-        docklessMap.map.removeControl(docklessMap.Draw);
-        $("#js-reset-map").removeClass("d-none");
       })
       .catch(error => {
         $("#errorModal").modal("show");
@@ -348,6 +352,7 @@ const ATD_DocklessMap = (function() {
       clearMap();
       docklessMap.map.addControl(docklessMap.Draw, "top-left");
       $("#js-reset-map").addClass("d-none");
+      docklessMap.isDrawControlActive = true;
     });
   };
 
