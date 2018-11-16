@@ -258,8 +258,8 @@ const ATD_DocklessMap = (function() {
   };
 
   const initializeDataFilters = () => {
-    const $flowSelect = docklessMap.$uiOverlayPane.find("#flow-select");
-    const $modeSelect = docklessMap.$uiOverlayPane.find("#mode-select");
+    const $flowSelect = docklessMap.$uiOverlayPane.find(".js-flow-select");
+    const $modeSelect = docklessMap.$uiOverlayPane.find(".js-mode-select");
 
     docklessMap.flow = $flowSelect.find("option:selected").val();
     docklessMap.mode = $modeSelect.find("option:selected").val();
@@ -275,11 +275,11 @@ const ATD_DocklessMap = (function() {
       const previousMode = docklessMap.mode;
 
       docklessMap.flow = $dataSelectForm
-        .find("#flow-select option:selected")
+        .find(".js-flow-select option:selected")
         .val();
 
       docklessMap.mode = $dataSelectForm
-        .find("#mode-select option:selected")
+        .find(".js-mode-select option:selected")
         .val();
 
       if (docklessMap.map.getLayer("feature_layer")) {
