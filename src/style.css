@@ -64,6 +64,13 @@
   z-index: 1;
 }
 
+.reset-map-btn {
+  position: absolute;
+  top: 100px;
+  left: 10px;
+  z-index: 1;
+}
+
 .close-pane-btn {
   float: right;
 }

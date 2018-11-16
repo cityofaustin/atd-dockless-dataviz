@@ -132,7 +132,6 @@ const ATD_DocklessMap = (function() {
       });
 
       docklessMap.map.on("click", "feature_layer", function(e) {
-        debugger;
         renderCellTripCount(e.features[0]);
       });
 
@@ -207,6 +206,7 @@ const ATD_DocklessMap = (function() {
     });
 
     handleMapResizeOnWindowChange();
+    handleResetMap();
   };
 
   const getUrl = (features, flow, mode) => {
@@ -315,6 +315,8 @@ const ATD_DocklessMap = (function() {
         docklessMap.Draw.deleteAll();
         docklessMap.total_trips = total_trips;
         addFeatures(features, intersect_feature, total_trips);
+        docklessMap.map.removeControl(docklessMap.Draw);
+        $("#js-reset-map").removeClass("d-none");
       })
       .catch(error => {
         $("#errorModal").modal("show");
@@ -330,10 +332,22 @@ const ATD_DocklessMap = (function() {
   const clearMapOnEscEvent = () => {
     $(document).keyup(function(e) {
       if (e.keyCode === 27) {
-        showLayer("feature_layer", false);
-        showLayer("reference_layer", false);
-        removeStats();
+        clearMap();
       }
+    });
+  };
+
+  const clearMap = () => {
+    showLayer("feature_layer", false);
+    showLayer("reference_layer", false);
+    removeStats();
+  };
+
+  const handleResetMap = () => {
+    $("#js-reset-map").on("click", () => {
+      clearMap();
+      docklessMap.map.addControl(docklessMap.Draw, "top-left");
+      $("#js-reset-map").addClass("d-none");
     });
   };
 
