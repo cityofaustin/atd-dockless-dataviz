@@ -283,6 +283,8 @@ const ATD_DocklessMap = (function() {
         .find(".js-mode-select option:selected")
         .val();
 
+      closeSlidingPane();
+
       if (docklessMap.map.getLayer("feature_layer")) {
         let visibility = docklessMap.map.getLayoutProperty(
           "feature_layer",
