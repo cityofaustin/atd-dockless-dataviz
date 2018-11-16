@@ -72,13 +72,14 @@
   padding: 4px 9px;
 }
 
-.close-pane-btn {
-  float: right;
-}
-
 .disclaimer {
   color: gray;
   font-size: 0.6em;
+}
+
+.city-seal-img {
+  max-width: 95px;
+  width: 100%;
 }
 
 .trip-stats-container--mobile {
