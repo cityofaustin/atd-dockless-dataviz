@@ -107,7 +107,6 @@ const ATD_DocklessMap = (function() {
       console.log("do magic");
 
       initializeDataFilters();
-      handleSelectChanges();
 
       docklessMap.map.on("draw.create", function(e) {
         showLoader();
@@ -208,6 +207,7 @@ const ATD_DocklessMap = (function() {
 
     handleMapResizeOnWindowChange();
     handleResetMap();
+    handleSelectChanges();
   };
 
   const getUrl = (features, flow, mode) => {
@@ -345,14 +345,14 @@ const ATD_DocklessMap = (function() {
     showLayer("feature_layer", false);
     showLayer("reference_layer", false);
     removeStats();
+    docklessMap.map.addControl(docklessMap.Draw, "top-left");
+    $("#js-reset-map").addClass("d-none");
+    docklessMap.isDrawControlActive = true;
   };
 
   const handleResetMap = () => {
     $("#js-reset-map").on("click", () => {
       clearMap();
-      docklessMap.map.addControl(docklessMap.Draw, "top-left");
-      $("#js-reset-map").addClass("d-none");
-      docklessMap.isDrawControlActive = true;
     });
   };
 
