@@ -268,7 +268,7 @@ const ATD_DocklessMap = (function() {
 
   const handleSelectChanges = () => {
     const $dataSelectForm = docklessMap.$uiOverlayPane.find(
-      "#data-select-form"
+      "#js-data-select-form"
     );
 
     $dataSelectForm.change(() => {
