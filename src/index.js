@@ -41,6 +41,7 @@ const ATD_DocklessMap = (function() {
       maxZoom: 19
     },
     Draw: "",
+    isDrawControlActive: true,
     flow: "",
     mode: "",
     url: "",
@@ -106,7 +107,6 @@ const ATD_DocklessMap = (function() {
       console.log("do magic");
 
       initializeDataFilters();
-      handleSelectChanges();
 
       docklessMap.map.on("draw.create", function(e) {
         showLoader();
@@ -132,7 +132,6 @@ const ATD_DocklessMap = (function() {
       });
 
       docklessMap.map.on("click", "feature_layer", function(e) {
-        debugger;
         renderCellTripCount(e.features[0]);
       });
 
@@ -207,6 +206,8 @@ const ATD_DocklessMap = (function() {
     });
 
     handleMapResizeOnWindowChange();
+    handleResetMap();
+    handleSelectChanges();
   };
 
   const getUrl = (features, flow, mode) => {
@@ -258,8 +259,8 @@ const ATD_DocklessMap = (function() {
   };
 
   const initializeDataFilters = () => {
-    const $flowSelect = docklessMap.$uiOverlayPane.find("#flow-select");
-    const $modeSelect = docklessMap.$uiOverlayPane.find("#mode-select");
+    const $flowSelect = docklessMap.$uiOverlayPane.find(".js-flow-select");
+    const $modeSelect = docklessMap.$uiOverlayPane.find(".js-mode-select");
 
     docklessMap.flow = $flowSelect.find("option:selected").val();
     docklessMap.mode = $modeSelect.find("option:selected").val();
@@ -267,20 +268,22 @@ const ATD_DocklessMap = (function() {
 
   const handleSelectChanges = () => {
     const $dataSelectForm = docklessMap.$uiOverlayPane.find(
-      "#data-select-form"
+      "#js-data-select-form"
     );
 
-    $dataSelectForm.change(function() {
+    $dataSelectForm.change(() => {
       const previousFlow = docklessMap.flow;
       const previousMode = docklessMap.mode;
 
       docklessMap.flow = $dataSelectForm
-        .find("#flow-select option:selected")
+        .find(".js-flow-select option:selected")
         .val();
 
       docklessMap.mode = $dataSelectForm
-        .find("#mode-select option:selected")
+        .find(".js-mode-select option:selected")
         .val();
+
+      closeSlidingPane();
 
       if (docklessMap.map.getLayer("feature_layer")) {
         let visibility = docklessMap.map.getLayoutProperty(
@@ -312,7 +315,12 @@ const ATD_DocklessMap = (function() {
       .get(url)
       .then(response => {
         const { features, intersect_feature, total_trips } = response.data;
-        docklessMap.Draw.deleteAll();
+        if (docklessMap.isDrawControlActive) {
+          docklessMap.Draw.deleteAll();
+          docklessMap.map.removeControl(docklessMap.Draw);
+          docklessMap.isDrawControlActive = false;
+          $("#js-reset-map").removeClass("d-none");
+        }
         docklessMap.total_trips = total_trips;
         addFeatures(features, intersect_feature, total_trips);
       })
@@ -330,10 +338,23 @@ const ATD_DocklessMap = (function() {
   const clearMapOnEscEvent = () => {
     $(document).keyup(function(e) {
       if (e.keyCode === 27) {
-        showLayer("feature_layer", false);
-        showLayer("reference_layer", false);
-        removeStats();
+        clearMap();
       }
+    });
+  };
+
+  const clearMap = () => {
+    showLayer("feature_layer", false);
+    showLayer("reference_layer", false);
+    removeStats();
+    docklessMap.map.addControl(docklessMap.Draw, "top-left");
+    $("#js-reset-map").addClass("d-none");
+    docklessMap.isDrawControlActive = true;
+  };
+
+  const handleResetMap = () => {
+    $("#js-reset-map").on("click", () => {
+      clearMap();
     });
   };
 
