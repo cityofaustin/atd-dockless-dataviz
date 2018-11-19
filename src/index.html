@@ -64,9 +64,15 @@
           <button id="js-reset-map" class="reset-map-btn btn btn-primary d-none">
             <i class="fas fa-redo fa-xs"></i>
           </button>
-          <button class="js-open-pane open-pane-btn btn btn-secondary d-sm-none">
-            <i class="fas fa-cog"></i>
-          </button>
+
+          <div class="btn-group coa-button-group">
+            <button class="js-question-modal btn btn-secondary d-sm-none">
+              <i class="fas fa-question"></i>
+            </button>
+            <button class="js-open-pane btn btn-secondary d-sm-none">
+              <i class="fas fa-cog"></i>
+            </button>
+          </div>
           <div id="map" class="h-100"></div>
           <div id="js-trip-stats-container--mobile" class="trip-stats-container--mobile"></div>
         </div>
@@ -118,7 +124,7 @@
         </div>
       </div>
 
-      <!-- Modal -->
+      <!-- Error Modal -->
       <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -129,6 +135,33 @@
               </button>
             </div>
             <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Welcome Modal -->
+      <div class="modal fade show d-md-none" id="welcomeModal" tabindex="-1" role="dialog" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" id="welcomeModalLabel">Welcome to the ATD Dockless Data Explorer</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body text-justify">
+              <p>The purpose of this tool is share data and stories about dockless mobility transit modes (scooters, e-bikes, etc). 🛴 🚲 🔌</p>
+
+              <p>This map shows origins and destinations of trips with accumulated data representing frequency as 3D hexagonal tiles and absolute trip counts and percentages.</p>
+
+              <p>Feedback and thoughts are invited to 📫 <a href="mailto:transportation.data@austintexas.gov?subject=dockless.austintexas.io">transportation.data@austintexas.gov</a> and visit the open-source project on <a href="https://github.com/cityofaustin/dockless">Github</a>.</p>
+              <div class="text-center mb-2">
+                <img src="/coa_seaL_lg.jpeg" alt="City of Austin Seal" class="city-seal-img">
+              </div>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

@@ -61,6 +61,7 @@ const ATD_DocklessMap = (function() {
     initalizeMap();
     runAppCode();
     registerEventHandlers();
+    popWelcomeModal();
   };
 
   const initalizeMap = () => {
@@ -208,6 +209,17 @@ const ATD_DocklessMap = (function() {
     handleMapResizeOnWindowChange();
     handleResetMap();
     handleSelectChanges();
+    handleWelcomeModalToggle();
+  };
+
+  const popWelcomeModal = () => {
+    if (document.cookie.indexOf("visited=true") == -1) {
+      $("#welcomeModal").modal("show");
+
+      const year = 1000 * 60 * 60 * 24 * 365;
+      const expires = new Date(new Date().valueOf() + year);
+      document.cookie = "visited=true;expires=" + expires.toUTCString();
+    }
   };
 
   const getUrl = (features, flow, mode) => {
@@ -511,6 +523,12 @@ const ATD_DocklessMap = (function() {
   const closeSlidingPane = () => {
     $(".js-sliding-pane").removeClass("map-overlay-pane--expanded");
     $(".js-sliding-pane").addClass("map-overlay-pane--collapsed");
+  };
+
+  const handleWelcomeModalToggle = () => {
+    $(".js-question-modal").on("click", () => {
+      $("#welcomeModal").modal("toggle");
+    });
   };
 
   return docklessMap;
