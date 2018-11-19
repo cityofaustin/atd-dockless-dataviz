@@ -64,13 +64,31 @@
   z-index: 1;
 }
 
-.close-pane-btn {
-  float: right;
+.reset-map-btn {
+  position: absolute;
+  top: 110px;
+  left: 10px;
+  z-index: 1;
+  padding: 4px 9px;
 }
 
 .disclaimer {
   color: gray;
-  font-size: 0.6em;
+  font-size: 0.8rem;
+  bottom: 0;
+}
+
+.city-seal-img {
+  max-width: 95px;
+  width: 100%;
+}
+
+.trip-stats-container--mobile {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 1rem;
 }
 
 /* Spinner */
