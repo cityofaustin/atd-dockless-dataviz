@@ -37,6 +37,7 @@
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.5.0",
     "@mapbox/mapbox-gl-draw": "^1.0.9",
     "axios": "^0.18.0",
     "bootstrap": "^4.1.3",
