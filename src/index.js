@@ -372,12 +372,17 @@ const ATD_DocklessMap = (function() {
   };
 
   const clearMap = () => {
-    showLayer("feature_layer", false);
-    showLayer("reference_layer", false);
-    removeStats();
-    docklessMap.map.addControl(docklessMap.Draw, "top-left");
-    $("#js-reset-map").addClass("d-none");
-    docklessMap.isDrawControlActive = true;
+    const isFeatureLayerActive =
+      docklessMap.map.getLayer("feature_layer").visibility === "visible";
+
+    if (isFeatureLayerActive) {
+      showLayer("feature_layer", false);
+      showLayer("reference_layer", false);
+      removeStats();
+      docklessMap.map.addControl(docklessMap.Draw, "top-left");
+      $("#js-reset-map").addClass("d-none");
+      docklessMap.isDrawControlActive = true;
+    }
   };
 
   const handleResetMap = () => {
