@@ -8,6 +8,12 @@ import ES6Promise from "es6-promise";
 import axios from "axios";
 import { ckmeans } from "simple-statistics";
 
+// custom JS modules
+import {
+  initializeTutorial,
+  initializeTutorialContinued
+} from "./modules/tutorial.js";
+
 // Vendor CSS
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
@@ -67,6 +73,7 @@ const ATD_DocklessMap = (function() {
     runAppCode();
     registerEventHandlers();
     popWelcomeModal();
+    initializeTutorial(docklessMap);
   };
 
   const initalizeMap = () => {
@@ -337,6 +344,9 @@ const ATD_DocklessMap = (function() {
           docklessMap.map.removeControl(docklessMap.Draw);
           docklessMap.isDrawControlActive = false;
           $("#js-reset-map").removeClass("d-none");
+          if (document.cookie.indexOf("turtorialed=true") == -1) {
+            initializeTutorialContinued(docklessMap);
+          }
         }
         docklessMap.total_trips = total_trips;
         addFeatures(features, intersect_feature, total_trips);
