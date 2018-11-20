@@ -22,6 +22,7 @@ import "../node_modules/@fortawesome/fontawesome-free/js/all.min.js";
 // Custom CSS
 import "./style.css";
 import "./css/mapbox-custom.css";
+import "./css/bootstrap-tooltip-custom.css";
 
 // Promise polyfill for IE 11
 // https://stackoverflow.com/questions/42533264/getting-error-promise-is-undefined-in-ie11
