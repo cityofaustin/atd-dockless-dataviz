@@ -1,3 +1,4 @@
+// Vendor JS modules
 import "jquery";
 import "bootstrap/dist/js/bootstrap";
 import mapboxgl from "mapbox-gl";
@@ -7,10 +8,14 @@ import ES6Promise from "es6-promise";
 import axios from "axios";
 import { ckmeans } from "simple-statistics";
 
+// Vendor CSS
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
-import "./style.css";
 import "../node_modules/@fortawesome/fontawesome-free/js/all.min.js";
+
+// Custom CSS
+import "./style.css";
+import "./css/mapbox-custom.css";
 
 // Promise polyfill for IE 11
 // https://stackoverflow.com/questions/42533264/getting-error-promise-is-undefined-in-ie11
