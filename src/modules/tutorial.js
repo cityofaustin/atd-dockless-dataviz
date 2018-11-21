@@ -23,11 +23,7 @@ export function initializeTutorialContinued(mapObject) {
 }
 
 function setTutorialStep1() {
-  setTooltip(
-    ".mapbox-gl-draw_point",
-    "right",
-    "Step 1: Click here to select a point. Or click above to start drawing a bounding box"
-  );
+  setTooltip(".mapbox-gl-draw_point", "right", "Click here to begin");
   showTooltip(".mapbox-gl-draw_point");
 }
 
@@ -40,7 +36,7 @@ function setTutorialStep2(mapObject) {
     window.ATD_TUTORIAL.popupStep2 = new mapboxgl.Popup()
       .setLngLat(MAP_CENTER)
       .setText(
-        "Step 2: Click any spot on the map to see where dockless trips started/ended."
+        "Click any spot on the map to see where dockless trips started/ended"
       )
       .addTo(mapObject.map);
   });
@@ -51,7 +47,7 @@ function setTutorialStep3(mapObject) {
   window.ATD_TUTORIAL.popupStep3 = new mapboxgl.Popup()
     .setLngLat(UTEXAS_LATLONG)
     .setText(
-      "Step 3: Click any hexagon cell to see counts and percentages of trips to/from that point or box."
+      "Click a hexagon to view how many trips started/ended at that location"
     )
     .addTo(mapObject.map);
 }
@@ -60,10 +56,7 @@ function setTutorialStep4() {
   $("#map-container").on("click.step4", () => {
     window.ATD_TUTORIAL.popupStep3.remove();
     const BOOTSTRAP_SM_BREAKPOINT = 575;
-    const step4Text = `
-      Step 4: Adjust data settings like origin vs. destination (flow) and
-      scooter vs. bicycle (mode).
-    `;
+    const step4Text = "Adjust more settings here";
 
     if (window.innerWidth < BOOTSTRAP_SM_BREAKPOINT) {
       setTooltip(".js-open-pane", "bottom", step4Text);
