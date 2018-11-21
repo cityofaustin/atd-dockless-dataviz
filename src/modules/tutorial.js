@@ -6,7 +6,6 @@ import { setTooltip, showTooltip } from "./tooltip_utils.js";
 window.ATD_TUTORIAL = {};
 
 export function initializeTutorial(mapObject) {
-  debugger;
   if (!window.Cookies.get("tutorialed")) {
     setTutorialStep1();
     setTutorialStep2(mapObject);
