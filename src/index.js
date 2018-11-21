@@ -54,7 +54,8 @@ const ATD_DocklessMap = (function() {
       center: [-97.74, 30.275],
       zoom: 13,
       minZoom: 1,
-      maxZoom: 19
+      maxZoom: 19,
+      pitch: 30
     },
     Draw: "",
     isDrawControlActive: true,
