@@ -1,4 +1,7 @@
 import mapboxgl from "mapbox-gl";
+
+// We have to import js-cookies this way because they need better support for
+// es6 module import: https://github.com/js-cookie/js-cookie/issues/233
 window.Cookies = require("js-cookie");
 
 import { setTooltip, showTooltip } from "./tooltip_utils.js";

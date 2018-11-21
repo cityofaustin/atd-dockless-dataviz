@@ -7,6 +7,9 @@ import { format } from "d3-format";
 import ES6Promise from "es6-promise";
 import axios from "axios";
 import { ckmeans } from "simple-statistics";
+
+// We have to import js-cookies this way because they need better support for
+// es6 module import: https://github.com/js-cookie/js-cookie/issues/233
 window.Cookies = require("js-cookie");
 
 // custom JS modules
