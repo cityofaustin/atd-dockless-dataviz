@@ -44,6 +44,7 @@
     "d3": "^5.7.0",
     "es6-promise-promise": "^1.0.0",
     "jquery": "^3.3.1",
+    "js-cookie": "^2.2.0",
     "lodash": "^4.17.11",
     "mapbox-gl": "^0.50.0",
     "popper.js": "^1.14.5",

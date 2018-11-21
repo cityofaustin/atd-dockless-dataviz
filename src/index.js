@@ -1,3 +1,4 @@
+// Vendor JS modules
 import "jquery";
 import "bootstrap/dist/js/bootstrap";
 import mapboxgl from "mapbox-gl";
@@ -7,10 +8,25 @@ import ES6Promise from "es6-promise";
 import axios from "axios";
 import { ckmeans } from "simple-statistics";
 
+// We have to import js-cookies this way because they need better support for
+// es6 module import: https://github.com/js-cookie/js-cookie/issues/233
+window.Cookies = require("js-cookie");
+
+// custom JS modules
+import {
+  initializeTutorial,
+  initializeTutorialContinued
+} from "./modules/tutorial.js";
+
+// Vendor CSS
 import "mapbox-gl/dist/mapbox-gl.css";
 import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
-import "./style.css";
 import "../node_modules/@fortawesome/fontawesome-free/js/all.min.js";
+
+// Custom CSS
+import "./style.css";
+import "./css/mapbox-custom.css";
+import "./css/bootstrap-tooltip-custom.css";
 
 // Promise polyfill for IE 11
 // https://stackoverflow.com/questions/42533264/getting-error-promise-is-undefined-in-ie11
@@ -61,6 +77,8 @@ const ATD_DocklessMap = (function() {
     initalizeMap();
     runAppCode();
     registerEventHandlers();
+    popWelcomeModal();
+    initializeTutorial(docklessMap);
   };
 
   const initalizeMap = () => {
@@ -208,6 +226,14 @@ const ATD_DocklessMap = (function() {
     handleMapResizeOnWindowChange();
     handleResetMap();
     handleSelectChanges();
+    handleWelcomeModalToggle();
+  };
+
+  const popWelcomeModal = () => {
+    if (!window.Cookies.get("visited")) {
+      $("#welcomeModal").modal("show");
+    }
+    window.Cookies.set("visited", true);
   };
 
   const getUrl = (features, flow, mode) => {
@@ -316,10 +342,19 @@ const ATD_DocklessMap = (function() {
       .then(response => {
         const { features, intersect_feature, total_trips } = response.data;
         if (docklessMap.isDrawControlActive) {
+          // When Mapbox Draw is active, touch events don't propagate so we have
+          // to deactivate the controls this way.
           docklessMap.Draw.deleteAll();
           docklessMap.map.removeControl(docklessMap.Draw);
           docklessMap.isDrawControlActive = false;
           $("#js-reset-map").removeClass("d-none");
+
+          // I wish the tutorial module could avoid leaking into this function, but
+          // with the Mapbox Draw bug block touch event when active,
+          // we have to initialize the second part of the tutorial this way.
+          if (!window.Cookies.get("tutorialed")) {
+            initializeTutorialContinued(docklessMap);
+          }
         }
         docklessMap.total_trips = total_trips;
         addFeatures(features, intersect_feature, total_trips);
@@ -344,12 +379,17 @@ const ATD_DocklessMap = (function() {
   };
 
   const clearMap = () => {
-    showLayer("feature_layer", false);
-    showLayer("reference_layer", false);
-    removeStats();
-    docklessMap.map.addControl(docklessMap.Draw, "top-left");
-    $("#js-reset-map").addClass("d-none");
-    docklessMap.isDrawControlActive = true;
+    const isFeatureLayerActive =
+      docklessMap.map.getLayer("feature_layer").visibility === "visible";
+
+    if (isFeatureLayerActive) {
+      showLayer("feature_layer", false);
+      showLayer("reference_layer", false);
+      removeStats();
+      docklessMap.map.addControl(docklessMap.Draw, "top-left");
+      $("#js-reset-map").addClass("d-none");
+      docklessMap.isDrawControlActive = true;
+    }
   };
 
   const handleResetMap = () => {
@@ -511,6 +551,12 @@ const ATD_DocklessMap = (function() {
   const closeSlidingPane = () => {
     $(".js-sliding-pane").removeClass("map-overlay-pane--expanded");
     $(".js-sliding-pane").addClass("map-overlay-pane--collapsed");
+  };
+
+  const handleWelcomeModalToggle = () => {
+    $(".js-question-modal").on("click", () => {
+      $("#welcomeModal").modal("toggle");
+    });
   };
 
   return docklessMap;
