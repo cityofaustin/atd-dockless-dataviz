@@ -51,7 +51,7 @@ function setTutorialStep3(mapObject) {
   window.ATD_TUTORIAL.popupStep3 = new mapboxgl.Popup()
     .setLngLat(UTEXAS_LATLONG)
     .setText(
-      "Step 3: Click any hexagon cell to see counts and percentages of trip to/from that point or box."
+      "Step 3: Click any hexagon cell to see counts and percentages of trips to/from that point or box."
     )
     .addTo(mapObject.map);
 }
@@ -59,20 +59,30 @@ function setTutorialStep3(mapObject) {
 function setTutorialStep4() {
   $("#map-container").on("click.step4", () => {
     window.ATD_TUTORIAL.popupStep3.remove();
+    const BOOTSTRAP_SM_BREAKPOINT = 575;
+    const step4Text = `
+      Step 4: Adjust data settings like origin vs. destination (flow) and
+      scooter vs. bicycle (mode).
+    `;
 
-    setTooltip(
-      ".js-open-pane",
-      "bottom",
-      "Step 4: Adjust data settings like origin vs. destination (flow) and scooter vs. bicycle (mode)."
-    );
-    showTooltip(".js-open-pane");
+    if (window.innerWidth < BOOTSTRAP_SM_BREAKPOINT) {
+      setTooltip(".js-open-pane", "bottom", step4Text);
+      showTooltip(".js-open-pane");
+
+      $(".js-open-pane").on("click.settingsClose", () => {
+        $(".js-open-pane").tooltip("hide");
+        $(".js-open-pane").off("click.settingsClose");
+      });
+    } else {
+      setTooltip(".js-flow-select", "top", step4Text);
+      showTooltip(".js-flow-select");
+      $(".js-flow-select").on("click.removeStep4", () => {
+        $(".js-flow-select").tooltip("hide");
+        $(".js-flow-select").off("click.removeStep4");
+      });
+    }
 
     $("#map-container").off("click.step4");
-
-    $(".js-open-pane").on("click.settingsClose", () => {
-      $(".js-open-pane").tooltip("hide");
-      $(".js-open-pane").off("click.settingsClose");
-    });
   });
 
   window.Cookies.set("tutorialed", true);
