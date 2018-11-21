@@ -339,10 +339,16 @@ const ATD_DocklessMap = (function() {
       .then(response => {
         const { features, intersect_feature, total_trips } = response.data;
         if (docklessMap.isDrawControlActive) {
+          // When Mapbox Draw is active, touch events don't propagate so we have
+          // to deactivate the controls this way.
           docklessMap.Draw.deleteAll();
           docklessMap.map.removeControl(docklessMap.Draw);
           docklessMap.isDrawControlActive = false;
           $("#js-reset-map").removeClass("d-none");
+
+          // I wish the tutorial module could avoid leaking into this function, but
+          // with the Mapbox Draw bug block touch event when active,
+          // we have to initialize the second part of the tutorial this way.
           if (!window.Cookies.get("tutorialed")) {
             initializeTutorialContinued(docklessMap);
           }
