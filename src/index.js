@@ -167,18 +167,18 @@ const ATD_DocklessMap = (function() {
 
     function renderCellTripCount(feature, divId = "js-data-pane") {
       const trip_percent =
-        feature.properties.current_count / docklessMap.total_trips;
+        feature.properties.trips / docklessMap.total_trips;
       let text;
 
       if (docklessMap.flow === "origin") {
         text = `${docklessMap.formatKs(
-          feature.properties.current_count
+          feature.properties.trips
         )} (${docklessMap.formatPct(
           trip_percent
         )}) trips originated in the clicked cell.`;
       } else if (docklessMap.flow === "destination") {
         text = `${docklessMap.formatKs(
-          feature.properties.current_count
+          feature.properties.trips
         )} (${docklessMap.formatPct(
           trip_percent
         )}) trips terminated in the clicked cell.`;
@@ -443,7 +443,7 @@ const ATD_DocklessMap = (function() {
 
           "fill-extrusion-height": [
             "*",
-            ["number", ["get", "current_count"]],
+            ["number", ["get", "trips"]],
             1
           ],
           "fill-extrusion-base": 0,
@@ -506,7 +506,7 @@ const ATD_DocklessMap = (function() {
       return "#ffeda0";
     }
 
-    let counts = features.map(f => f.properties.current_count);
+    let counts = features.map(f => f.properties.trips);
 
     if (Math.max(...counts) - Math.min(...counts) < docklessMap.numClasses) {
       // paint everything the same color when the range of trip counts is small
@@ -519,7 +519,7 @@ const ATD_DocklessMap = (function() {
     return [
       "interpolate",
       ["linear"],
-      ["number", ["get", "current_count"]],
+      ["number", ["get", "trips"]],
       breaks[0][0] - 1,
       "#ffeda0",
       breaks[1][0] - 1,
