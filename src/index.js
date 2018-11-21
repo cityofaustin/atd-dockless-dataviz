@@ -166,8 +166,7 @@ const ATD_DocklessMap = (function() {
     });
 
     function renderCellTripCount(feature, divId = "js-data-pane") {
-      const trip_percent =
-        feature.properties.trips / docklessMap.total_trips;
+      const trip_percent = feature.properties.trips / docklessMap.total_trips;
       let text;
 
       if (docklessMap.flow === "origin") {
@@ -441,11 +440,7 @@ const ATD_DocklessMap = (function() {
         paint: {
           "fill-extrusion-color": getPaint(features.features),
 
-          "fill-extrusion-height": [
-            "*",
-            ["number", ["get", "trips"]],
-            1
-          ],
+          "fill-extrusion-height": ["*", ["number", ["get", "trips"]], 1],
           "fill-extrusion-base": 0,
           "fill-extrusion-opacity": 0.7
         }
@@ -478,11 +473,7 @@ const ATD_DocklessMap = (function() {
         layout: {},
         paint: {
           "fill-extrusion-color": "#756bb1",
-          "fill-extrusion-height": [
-            "*",
-            ["number", ["get", "current_count"]],
-            1
-          ],
+          "fill-extrusion-height": ["*", ["number", ["get", "trips"]], 1],
           "fill-extrusion-base": 0,
           "fill-extrusion-opacity": 0.7
         }
