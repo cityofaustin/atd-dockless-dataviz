@@ -11,7 +11,3 @@ export function setTooltip(selector, placement = "right", title, callback) {
 export function showTooltip(selector = "button.mapbox-gl-draw_polygon") {
   $(selector).tooltip("show");
 }
-
-export function initializeAllTooltips() {
-  $('[data-toggle="tooltip"]').tooltip("show");
-}
