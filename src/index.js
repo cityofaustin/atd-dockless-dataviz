@@ -228,6 +228,7 @@ const ATD_DocklessMap = (function() {
     handleResetMap();
     handleSelectChanges();
     handleWelcomeModalToggle();
+    handleActiveCellHighlight();
   };
 
   const popWelcomeModal = () => {
@@ -427,13 +428,15 @@ const ATD_DocklessMap = (function() {
 
   const addFeatures = (features, reference_features, total_trips) => {
     if (docklessMap.first) {
+      docklessMap.map.addSource("features", {
+        type: "geojson",
+        data: features
+      });
+
       docklessMap.map.addLayer({
         id: "feature_layer",
         type: "fill-extrusion",
-        source: {
-          type: "geojson",
-          data: features
-        },
+        source: "features",
         layout: {},
         paint: {
           "fill-extrusion-color": getPaint(features.features),
@@ -467,10 +470,30 @@ const ATD_DocklessMap = (function() {
         }
       });
 
+      // highlight layer to activate later
+      docklessMap.map.addLayer({
+        id: "feature_layer_highlight",
+        type: "fill-extrusion",
+        source: "features",
+        layout: {},
+        paint: {
+          "fill-extrusion-color": "#756bb1",
+          "fill-extrusion-height": [
+            "*",
+            ["number", ["get", "current_count"]],
+            1
+          ],
+          "fill-extrusion-base": 0,
+          "fill-extrusion-opacity": 0.7
+        }
+      });
+
       showLayer("feature_layer", true);
       showLayer("reference_layer", true);
+      showLayer("feature_layer_highlight", false);
       hideLoader();
       renderTrips(docklessMap.total_trips);
+
       docklessMap.first = false;
     } else {
       updateLayers(features, reference_features, docklessMap.total_trips);
@@ -557,6 +580,20 @@ const ATD_DocklessMap = (function() {
   const handleWelcomeModalToggle = () => {
     $(".js-question-modal").on("click", () => {
       $("#welcomeModal").modal("toggle");
+    });
+  };
+
+  const handleActiveCellHighlight = () => {
+    docklessMap.map.on("click", "feature_layer", e => {
+      // Filter features of the highlighted layer down just for the one clicked.
+      docklessMap.map.setFilter("feature_layer_highlight", [
+        "==",
+        "current_count",
+        // TODO: We need a UID for the cell added as a property on the backend.
+        // We're just using current_count right now bc its all I have but it results in duplicates.
+        e.features[0].properties.current_count
+      ]);
+      showLayer("feature_layer_highlight", true);
     });
   };
 
