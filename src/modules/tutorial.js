@@ -1,4 +1,5 @@
 import mapboxgl from "mapbox-gl";
+window.Cookies = require("js-cookie");
 
 import {
   setTooltip,
@@ -7,6 +8,13 @@ import {
 } from "./tooltip_utils.js";
 
 const UTEXAS_LATLONG = [-97.734785, 30.284145];
+export function initializeTutorial(mapObject) {
+  debugger;
+  if (!window.Cookies.get("tutorialed")) {
+    setTutorialStep1();
+    setTutorialStep2(mapObject);
+  }
+}
 
 export function initializeTutorialContinued(mapObject) {
   window.ATD_TUTORIAL.popupStep2.remove();
@@ -73,11 +81,5 @@ function setTutorialStep4() {
     });
   });
 
-  setCookieForCompleteTutorial();
-}
-
-function setCookieForCompleteTutorial() {
-  const year = 1000 * 60 * 60 * 24 * 365;
-  const expires = new Date(new Date().valueOf() + year);
-  document.cookie = "turtorialed=true;expires=" + expires.toUTCString();
+  window.Cookies.set("tutorialed", true);
 }

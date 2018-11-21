@@ -7,6 +7,7 @@ import { format } from "d3-format";
 import ES6Promise from "es6-promise";
 import axios from "axios";
 import { ckmeans } from "simple-statistics";
+window.Cookies = require("js-cookie");
 
 // custom JS modules
 import {
@@ -226,13 +227,10 @@ const ATD_DocklessMap = (function() {
   };
 
   const popWelcomeModal = () => {
-    if (document.cookie.indexOf("visited=true") == -1) {
+    if (!window.Cookies.get("visited")) {
       $("#welcomeModal").modal("show");
-
-      const year = 1000 * 60 * 60 * 24 * 365;
-      const expires = new Date(new Date().valueOf() + year);
-      document.cookie = "visited=true;expires=" + expires.toUTCString();
     }
+    window.Cookies.set("visited", true);
   };
 
   const getUrl = (features, flow, mode) => {
@@ -345,7 +343,7 @@ const ATD_DocklessMap = (function() {
           docklessMap.map.removeControl(docklessMap.Draw);
           docklessMap.isDrawControlActive = false;
           $("#js-reset-map").removeClass("d-none");
-          if (document.cookie.indexOf("turtorialed=true") == -1) {
+          if (!window.Cookies.get("tutorialed")) {
             initializeTutorialContinued(docklessMap);
           }
         }
