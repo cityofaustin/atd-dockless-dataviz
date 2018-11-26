@@ -386,6 +386,7 @@ const ATD_DocklessMap = (function() {
     if (isFeatureLayerActive) {
       showLayer("feature_layer", false);
       showLayer("reference_layer", false);
+      showLayer("feature_layer_highlight", false);
       removeStats();
       docklessMap.map.addControl(docklessMap.Draw, "top-left");
       $("#js-reset-map").addClass("d-none");
@@ -410,6 +411,7 @@ const ATD_DocklessMap = (function() {
   const updateLayers = (features, reference_features, total_trips) => {
     docklessMap.map.getSource("reference_layer").setData(reference_features);
     docklessMap.map.getSource("feature_layer").setData(features);
+    docklessMap.map.getSource("feature_layer_highlight").setData(features);
     docklessMap.map.setPaintProperty(
       "feature_layer",
       "fill-extrusion-color",
