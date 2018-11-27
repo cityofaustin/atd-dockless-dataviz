@@ -410,8 +410,7 @@ const ATD_DocklessMap = (function() {
 
   const updateLayers = (features, reference_features, total_trips) => {
     docklessMap.map.getSource("reference_layer").setData(reference_features);
-    docklessMap.map.getSource("feature_layer").setData(features);
-    docklessMap.map.getSource("feature_layer_highlight").setData(features);
+    docklessMap.map.getSource("features").setData(features);
     docklessMap.map.setPaintProperty(
       "feature_layer",
       "fill-extrusion-color",
