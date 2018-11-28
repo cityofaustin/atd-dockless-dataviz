@@ -54,7 +54,8 @@ const ATD_DocklessMap = (function() {
       center: [-97.74, 30.275],
       zoom: 13,
       minZoom: 1,
-      maxZoom: 19
+      maxZoom: 19,
+      pitch: 15
     },
     Draw: "",
     isDrawControlActive: true,
@@ -165,8 +166,7 @@ const ATD_DocklessMap = (function() {
     });
 
     function renderCellTripCount(feature, divId = "js-data-pane") {
-      const trip_percent =
-        feature.properties.trips / docklessMap.total_trips;
+      const trip_percent = feature.properties.trips / docklessMap.total_trips;
       let text;
 
       if (docklessMap.flow === "origin") {
@@ -227,6 +227,7 @@ const ATD_DocklessMap = (function() {
     handleResetMap();
     handleSelectChanges();
     handleWelcomeModalToggle();
+    handleActiveCellHighlight();
   };
 
   const popWelcomeModal = () => {
@@ -385,6 +386,7 @@ const ATD_DocklessMap = (function() {
     if (isFeatureLayerActive) {
       showLayer("feature_layer", false);
       showLayer("reference_layer", false);
+      showLayer("feature_layer_highlight", false);
       removeStats();
       docklessMap.map.addControl(docklessMap.Draw, "top-left");
       $("#js-reset-map").addClass("d-none");
@@ -408,7 +410,7 @@ const ATD_DocklessMap = (function() {
 
   const updateLayers = (features, reference_features, total_trips) => {
     docklessMap.map.getSource("reference_layer").setData(reference_features);
-    docklessMap.map.getSource("feature_layer").setData(features);
+    docklessMap.map.getSource("features").setData(features);
     docklessMap.map.setPaintProperty(
       "feature_layer",
       "fill-extrusion-color",
@@ -426,22 +428,20 @@ const ATD_DocklessMap = (function() {
 
   const addFeatures = (features, reference_features, total_trips) => {
     if (docklessMap.first) {
+      docklessMap.map.addSource("features", {
+        type: "geojson",
+        data: features
+      });
+
       docklessMap.map.addLayer({
         id: "feature_layer",
         type: "fill-extrusion",
-        source: {
-          type: "geojson",
-          data: features
-        },
+        source: "features",
         layout: {},
         paint: {
           "fill-extrusion-color": getPaint(features.features),
 
-          "fill-extrusion-height": [
-            "*",
-            ["number", ["get", "trips"]],
-            1
-          ],
+          "fill-extrusion-height": ["*", ["number", ["get", "trips"]], 1],
           "fill-extrusion-base": 0,
           "fill-extrusion-opacity": 0.7
         }
@@ -466,10 +466,26 @@ const ATD_DocklessMap = (function() {
         }
       });
 
+      // highlight layer to activate later
+      docklessMap.map.addLayer({
+        id: "feature_layer_highlight",
+        type: "fill-extrusion",
+        source: "features",
+        layout: {},
+        paint: {
+          "fill-extrusion-color": "#756bb1",
+          "fill-extrusion-height": ["*", ["number", ["get", "trips"]], 1],
+          "fill-extrusion-base": 0,
+          "fill-extrusion-opacity": 0.7
+        }
+      });
+
       showLayer("feature_layer", true);
       showLayer("reference_layer", true);
+      showLayer("feature_layer_highlight", false);
       hideLoader();
       renderTrips(docklessMap.total_trips);
+
       docklessMap.first = false;
     } else {
       updateLayers(features, reference_features, docklessMap.total_trips);
@@ -556,6 +572,18 @@ const ATD_DocklessMap = (function() {
   const handleWelcomeModalToggle = () => {
     $(".js-question-modal").on("click", () => {
       $("#welcomeModal").modal("toggle");
+    });
+  };
+
+  const handleActiveCellHighlight = () => {
+    docklessMap.map.on("click", "feature_layer", e => {
+      // Filter features of the highlighted layer down just for the one clicked.
+      docklessMap.map.setFilter("feature_layer_highlight", [
+        "==",
+        "cell_id",
+        e.features[0].properties.cell_id
+      ]);
+      showLayer("feature_layer_highlight", true);
     });
   };
 
