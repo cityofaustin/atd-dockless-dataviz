@@ -580,10 +580,8 @@ const ATD_DocklessMap = (function() {
       // Filter features of the highlighted layer down just for the one clicked.
       docklessMap.map.setFilter("feature_layer_highlight", [
         "==",
-        "trips",
-        // TODO: We need a UID for the cell added as a property on the backend.
-        // We're just using trips right now bc its all I have but it results in duplicates.
-        e.features[0].properties.trips
+        "cell_id",
+        e.features[0].properties.cell_id
       ]);
       showLayer("feature_layer_highlight", true);
     });
