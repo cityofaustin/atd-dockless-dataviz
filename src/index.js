@@ -174,13 +174,13 @@ const ATD_DocklessMap = (function() {
           feature.properties.trips
         )} (${docklessMap.formatPct(
           trip_percent
-        )}) trips originated in the clicked cell.`;
+        )}) trips started in the clicked cell.`;
       } else if (docklessMap.flow === "destination") {
         text = `${docklessMap.formatKs(
           feature.properties.trips
         )} (${docklessMap.formatPct(
           trip_percent
-        )}) trips terminated in the clicked cell.`;
+        )}) trips ended in the clicked cell.`;
       }
 
       const html = `
