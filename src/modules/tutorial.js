@@ -7,6 +7,7 @@ window.Cookies = require("js-cookie");
 import { setTooltip, showTooltip } from "./tooltip_utils.js";
 
 window.ATD_TUTORIAL = {};
+const BOOTSTRAP_SM_BREAKPOINT = 575;
 
 export function initializeTutorial(mapObject) {
   if (!window.Cookies.get("tutorialed")) {
@@ -19,7 +20,7 @@ export function initializeTutorialContinued(mapObject) {
   window.ATD_TUTORIAL.popupStep2.remove();
 
   setTutorialStep3(mapObject);
-  setTutorialStep4();
+  setTutorialStep4And5();
 }
 
 function setTutorialStep1() {
@@ -52,31 +53,54 @@ function setTutorialStep3(mapObject) {
     .addTo(mapObject.map);
 }
 
-function setTutorialStep4() {
+function setTutorialStep4And5() {
   $("#map-container").on("click.step4", () => {
     window.ATD_TUTORIAL.popupStep3.remove();
-    const BOOTSTRAP_SM_BREAKPOINT = 575;
-    const step4Text = "Adjust more settings here";
 
+    // Tilt doesn't really work on mobile so we need to skip this step on small
+    // devices.
     if (window.innerWidth < BOOTSTRAP_SM_BREAKPOINT) {
-      setTooltip(".js-open-pane", "bottom", step4Text);
-      showTooltip(".js-open-pane");
-
-      $(".js-open-pane").on("click.settingsClose", () => {
-        $(".js-open-pane").tooltip("hide");
-        $(".js-open-pane").off("click.settingsClose");
-      });
+      runTutorialStep5(".mapboxgl-ctrl-compass-arrow");
     } else {
-      setTooltip(".js-flow-select", "top", step4Text);
-      showTooltip(".js-flow-select");
-      $(".js-flow-select").on("click.removeStep4", () => {
-        $(".js-flow-select").tooltip("hide");
-        $(".js-flow-select").off("click.removeStep4");
+      setTooltip(
+        ".mapboxgl-ctrl-compass-arrow",
+        "right",
+        "Click & drag here to tilt the map"
+      );
+      showTooltip(".mapboxgl-ctrl-compass-arrow");
+
+      // set the next step's trigger based on device width
+      $(".mapboxgl-ctrl-compass-arrow").on("mousedown.step5", () => {
+        runTutorialStep5();
+        $(".mapboxgl-ctrl-compass-arrow").off("mousedown.step5");
+        $(".mapboxgl-ctrl-compass-arrow").tooltip("hide");
       });
     }
 
     $("#map-container").off("click.step4");
   });
+}
 
+function runTutorialStep5() {
+  const step5Text = "Adjust more settings here";
+
+  if (window.innerWidth < BOOTSTRAP_SM_BREAKPOINT) {
+    setTooltip(".js-open-pane", "bottom", step5Text);
+    showTooltip(".js-open-pane");
+
+    $(".js-open-pane").on("click.settingsClose", () => {
+      $(".js-open-pane").tooltip("hide");
+      $(".js-open-pane").off("click.settingsClose");
+    });
+  } else {
+    setTooltip(".js-flow-select", "top", step5Text);
+    showTooltip(".js-flow-select");
+    $(".js-flow-select").on("click.removeStep5", () => {
+      $(".js-flow-select").tooltip("hide");
+      $(".js-flow-select").off("click.removeStep5");
+    });
+  }
+
+  $("#map-container").off("click.step5");
   window.Cookies.set("tutorialed", true);
 }
