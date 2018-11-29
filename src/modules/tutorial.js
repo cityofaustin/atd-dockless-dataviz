@@ -85,22 +85,21 @@ function runTutorialStep5() {
   const step5Text = "Adjust more settings here";
 
   if (window.innerWidth < BOOTSTRAP_SM_BREAKPOINT) {
-    setTooltip(".js-open-pane", "bottom", step5Text);
-    showTooltip(".js-open-pane");
-
-    $(".js-open-pane").on("click.settingsClose", () => {
-      $(".js-open-pane").tooltip("hide");
-      $(".js-open-pane").off("click.settingsClose");
-    });
+    addStep5TooltipForElement(".js-open-pane", "bottom", step5Text);
   } else {
-    setTooltip(".js-flow-select", "top", step5Text);
-    showTooltip(".js-flow-select");
-    $(".js-flow-select").on("click.removeStep5", () => {
-      $(".js-flow-select").tooltip("hide");
-      $(".js-flow-select").off("click.removeStep5");
-    });
+    addStep5TooltipForElement(".js-flow-select", "top", step5Text);
   }
 
   $("#map-container").off("click.step5");
   window.Cookies.set("tutorialed", true);
+}
+
+function addStep5TooltipForElement(element, side, text) {
+  setTooltip(element, side, text);
+  showTooltip(element);
+
+  $(element).on("click.step5TooltipClose", () => {
+    $(element).tooltip("hide");
+    $(element).off("click.step5TooltipClose");
+  });
 }
