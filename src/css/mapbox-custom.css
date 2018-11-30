@@ -1,3 +1,19 @@
 .mapboxgl-popup {
   max-width: 50%;
 }
+
+.mapboxgl-popup-content {
+  color: white;
+  background: black;
+  font-size: 0.875rem;
+  text-align: center;
+  padding-top: 1rem;
+}
+
+.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
+  border-top-color: black;
+}
+
+.mapboxgl-popup-close-button {
+  color: white;
+}
