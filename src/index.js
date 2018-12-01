@@ -352,6 +352,11 @@ const ATD_DocklessMap = (function() {
           // When Mapbox Draw is active, touch events don't propagate so we have
           // to deactivate the controls this way.
           docklessMap.Draw.deleteAll();
+
+          // Before we remove the control, make sure there isn't a tutorial
+          // tooltip attached.
+          $(".mapbox-gl-draw_point").tooltip("hide");
+
           docklessMap.map.removeControl(docklessMap.Draw);
           docklessMap.isDrawControlActive = false;
           $("#js-reset-map").removeClass("d-none");

@@ -17,6 +17,14 @@ export function initializeTutorial(mapObject) {
 }
 
 export function initializeTutorialContinued(mapObject) {
+  // When someone skips the prompts, go ahead and close the tooltip and assume
+  // they don't need the tutorial anymore.
+  if (typeof window.ATD_TUTORIAL.popupStep2 === "undefined") {
+    $(".mapbox-gl-draw_ctrl-draw-btn").tooltip("hide");
+    window.Cookies.set("tutorialed", true);
+    return false;
+  }
+
   window.ATD_TUTORIAL.popupStep2.remove();
 
   setTutorialStep3(mapObject);
