@@ -451,8 +451,11 @@ const ATD_DocklessMap = (function() {
         layout: {},
         paint: {
           "fill-extrusion-color": getPaint(features.features),
-
-          "fill-extrusion-height": ["*", ["number", ["get", "trips"]], 1],
+          "fill-extrusion-height": [
+            "*",
+            ["number", ["get", "count_as_height"]],
+            1
+          ],
           "fill-extrusion-base": 0,
           "fill-extrusion-opacity": 0.7
         }
@@ -485,7 +488,11 @@ const ATD_DocklessMap = (function() {
         layout: {},
         paint: {
           "fill-extrusion-color": "#756bb1",
-          "fill-extrusion-height": ["*", ["number", ["get", "trips"]], 1],
+          "fill-extrusion-height": [
+            "*",
+            ["number", ["get", "count_as_height"]],
+            1
+          ],
           "fill-extrusion-base": 0,
           "fill-extrusion-opacity": 0.7
         }
