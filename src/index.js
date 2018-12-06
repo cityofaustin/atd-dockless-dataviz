@@ -478,6 +478,12 @@ const ATD_DocklessMap = (function() {
       itemHtml.appendChild(tripsTextHtml);
       $("#js-legend").append(itemHtml);
     }
+
+    // Add height scale note
+    $("#js-legend").append(`
+      <span class='legend-title mt-2'>Cell Height</span>
+      <span>5 trips = 1 meter</span>
+    `);
   };
 
   const removeStats = (selector = "stats") => {
