@@ -412,13 +412,14 @@ const ATD_DocklessMap = (function() {
       $("#js-reset-map").addClass("d-none");
       docklessMap.isDrawControlActive = true;
     }
+
+    // Remove previous legend
+    $("#js-legend").empty();
   };
 
   const handleResetMap = () => {
     $("#js-reset-map").on("click", () => {
       clearMap();
-      // Remove previous legend
-      $("#js-legend").empty();
     });
   };
 
