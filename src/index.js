@@ -388,6 +388,7 @@ const ATD_DocklessMap = (function() {
           <p>If the problem persists, please <a href="mailto:ATDDataTechnologyServices@austintexas.gov?subject=Bug Report: Dockless Data Explorer">email us</a> or <a href="https://github.com/cityofaustin/dockless/issues/new">create a new issue</a> on our Github repo.</p>
           <h5>Error Message:</h5><code>${error}</code>
         `);
+        throw error;
       });
   };
 
