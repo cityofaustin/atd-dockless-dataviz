@@ -4,7 +4,7 @@ import mapboxgl from "mapbox-gl";
 // es6 module import: https://github.com/js-cookie/js-cookie/issues/233
 window.Cookies = require("js-cookie");
 
-import { setTooltip, showTooltip } from "./tooltip_utils.js";
+import { setTooltip, showTooltip } from "./tooltipUtils.js";
 
 window.ATD_TUTORIAL = {};
 const BOOTSTRAP_SM_BREAKPOINT = 575;
@@ -17,6 +17,14 @@ export function initializeTutorial(mapObject) {
 }
 
 export function initializeTutorialContinued(mapObject) {
+  // When someone skips the prompts, go ahead and close the tooltip and assume
+  // they don't need the tutorial anymore.
+  if (typeof window.ATD_TUTORIAL.popupStep2 === "undefined") {
+    $(".mapbox-gl-draw_ctrl-draw-btn").tooltip("hide");
+    window.Cookies.set("tutorialed", true);
+    return false;
+  }
+
   window.ATD_TUTORIAL.popupStep2.remove();
 
   setTutorialStep3(mapObject);
