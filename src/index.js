@@ -18,6 +18,7 @@ import {
   initializeTutorial,
   initializeTutorialContinued
 } from "./modules/tutorial.js";
+import { numberWithCommas } from "./modules/numberWithCommas";
 
 // Vendor CSS
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -67,7 +68,15 @@ const ATD_DocklessMap = (function() {
     first: true,
     formatPct: format(".1%"),
     formatKs: format(","),
-    numClasses: 5
+    numClasses: 5,
+    colorClassArray: [
+      // color ramps courtesy of ColorBrewer (http://colorbrewer2.org)
+      "#ffeda0",
+      "#fed976",
+      "#fd8d3c",
+      "#e31a1c",
+      "#60001d"
+    ]
   };
 
   // Attach public methods like this using object literal notation.
@@ -403,6 +412,9 @@ const ATD_DocklessMap = (function() {
       $("#js-reset-map").addClass("d-none");
       docklessMap.isDrawControlActive = true;
     }
+
+    // Remove previous legend
+    $("#js-legend").empty();
   };
 
   const handleResetMap = () => {
@@ -427,10 +439,52 @@ const ATD_DocklessMap = (function() {
       "fill-extrusion-color",
       getPaint(features.features)
     );
+    updateLegend(features.features);
     showLayer("feature_layer", true);
     showLayer("reference_layer", true);
     hideLoader();
     renderTrips(total_trips);
+  };
+
+  const updateLegend = features => {
+    const counts = features.map(f => f.properties.trips);
+    const breaks = jenksBreaks(counts, docklessMap.numClasses);
+
+    // Add legend title
+    $("#js-legend").append("<span class='legend-title'>Number of Trips</span>");
+
+    // Loop over class breaks and add to legend keys
+    for (let i = 0; i < breaks.length; i++) {
+      let color = docklessMap.colorClassArray[i];
+      let itemHtml = document.createElement("div");
+      let colorKeyHtml = document.createElement("span");
+      let tripsTextHtml = document.createElement("span");
+      let text;
+
+      colorKeyHtml.className = "legend-key";
+      colorKeyHtml.style.backgroundColor = color;
+
+      if (i < 4) {
+        text = `
+          ${numberWithCommas(breaks[i][0])} -
+          ${numberWithCommas(breaks[i + 1][0] - 1)}
+        `;
+      } else {
+        // Only for the last value use a different text template
+        text = `${numberWithCommas(breaks[i][0])}+`;
+      }
+
+      tripsTextHtml.innerHTML = text;
+      itemHtml.appendChild(colorKeyHtml);
+      itemHtml.appendChild(tripsTextHtml);
+      $("#js-legend").append(itemHtml);
+    }
+
+    // Add height scale note
+    $("#js-legend").append(`
+      <span class='legend-title mt-2'>Cell Height</span>
+      <span>5 trips = 1 meter</span>
+    `);
   };
 
   const removeStats = (selector = "stats") => {
@@ -498,6 +552,7 @@ const ATD_DocklessMap = (function() {
         }
       });
 
+      updateLegend(features.features);
       showLayer("feature_layer", true);
       showLayer("reference_layer", true);
       showLayer("feature_layer_highlight", false);
@@ -511,35 +566,34 @@ const ATD_DocklessMap = (function() {
   };
 
   const getPaint = features => {
-    if (features.length <= docklessMap.numClasses) {
-      // paint everything the same color when there are few features to style
-      return "#ffeda0";
+    const counts = features.map(f => f.properties.trips);
+    const breaks = jenksBreaks(counts, docklessMap.numClasses);
+    const hasFewerFeaturesThanClasses =
+      features.length <= docklessMap.numClasses;
+    const hasSmallRangeOfTrips =
+      Math.max(...counts) - Math.min(...counts) < docklessMap.numClasses;
+
+    // paint everything the same color when:
+    //    - there are few features to style
+    //    - the range of trip counts is small
+    if (hasFewerFeaturesThanClasses || hasSmallRangeOfTrips) {
+      return docklessMap.colorClassArray[0];
     }
 
-    let counts = features.map(f => f.properties.trips);
-
-    if (Math.max(...counts) - Math.min(...counts) < docklessMap.numClasses) {
-      // paint everything the same color when the range of trip counts is small
-      return "#ffeda0";
-    }
-
-    let breaks = jenksBreaks(counts, docklessMap.numClasses);
-
-    // color ramps courtesy of ColorBrewer (http://colorbrewer2.org)
     return [
       "interpolate",
       ["linear"],
       ["number", ["get", "trips"]],
       breaks[0][0] - 1,
-      "#ffeda0",
+      docklessMap.colorClassArray[0],
       breaks[1][0] - 1,
-      "#fed976",
+      docklessMap.colorClassArray[1],
       breaks[2][0] - 1,
-      "#fd8d3c",
+      docklessMap.colorClassArray[2],
       breaks[3][0] - 1,
-      "#e31a1c",
+      docklessMap.colorClassArray[3],
       breaks[4][0],
-      "#800026"
+      docklessMap.colorClassArray[4]
     ];
   };
 
