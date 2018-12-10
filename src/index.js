@@ -388,6 +388,7 @@ const ATD_DocklessMap = (function() {
           <p>If the problem persists, please <a href="mailto:ATDDataTechnologyServices@austintexas.gov?subject=Bug Report: Dockless Data Explorer">email us</a> or <a href="https://github.com/cityofaustin/dockless/issues/new">create a new issue</a> on our Github repo.</p>
           <h5>Error Message:</h5><code>${error}</code>
         `);
+        throw error;
       });
   };
 
@@ -452,6 +453,13 @@ const ATD_DocklessMap = (function() {
 
     // Add legend title
     $("#js-legend").append("<span class='legend-title'>Number of Trips</span>");
+
+    // Add time range
+    $("#js-legend").append(`
+      <span class='font-italic small mb-2 d-block'>
+        Data from <span id="js-data-date-range">July - Sept 2018</span>
+      </span>
+    `);
 
     // Loop over class breaks and add to legend keys
     for (let i = 0; i < breaks.length; i++) {
