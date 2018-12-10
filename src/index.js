@@ -379,6 +379,7 @@ const ATD_DocklessMap = (function() {
         }
         docklessMap.total_trips = total_trips;
         addFeatures(features, intersect_feature, total_trips);
+        updateLegend(features.features);
       })
       .catch(error => {
         $("#errorModal").modal("show");
@@ -440,7 +441,6 @@ const ATD_DocklessMap = (function() {
       "fill-extrusion-color",
       getPaint(features.features)
     );
-    updateLegend(features.features);
     showLayer("feature_layer", true);
     showLayer("reference_layer", true);
     hideLoader();
@@ -450,6 +450,9 @@ const ATD_DocklessMap = (function() {
   const updateLegend = features => {
     const counts = features.map(f => f.properties.trips);
     const breaks = jenksBreaks(counts, docklessMap.numClasses);
+
+    // Reset & remove old legend HTML content
+    $("#js-legend").empty();
 
     // Add legend title
     $("#js-legend").append("<span class='legend-title'>Number of Trips</span>");
@@ -560,7 +563,6 @@ const ATD_DocklessMap = (function() {
         }
       });
 
-      updateLegend(features.features);
       showLayer("feature_layer", true);
       showLayer("reference_layer", true);
       showLayer("feature_layer_highlight", false);
