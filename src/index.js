@@ -19,6 +19,10 @@ import {
   initializeTutorialContinued
 } from "./modules/tutorial.js";
 import { numberWithCommas } from "./modules/numberWithCommas";
+import {
+  initializeDatepicker,
+  convertDateStringToUnix
+} from "./modules/datepicker";
 
 // Vendor CSS
 import "mapbox-gl/dist/mapbox-gl.css";
@@ -63,6 +67,8 @@ const ATD_DocklessMap = (function() {
     isDrawControlActive: true,
     flow: "",
     mode: "",
+    startTime: null,
+    endTime: null,
     url: "",
     total_trips: "",
     first: true,
@@ -90,6 +96,7 @@ const ATD_DocklessMap = (function() {
     registerEventHandlers();
     popWelcomeModal();
     initializeTutorial(docklessMap);
+    initializeDatepicker(docklessMap);
   };
 
   const initalizeMap = () => {
@@ -144,7 +151,9 @@ const ATD_DocklessMap = (function() {
         docklessMap.url = getUrl(
           e.features,
           docklessMap.flow,
-          docklessMap.mode
+          docklessMap.mode,
+          docklessMap.startTime,
+          docklessMap.endTime
         );
         console.log(docklessMap.url);
         getData(docklessMap.url);
@@ -156,7 +165,9 @@ const ATD_DocklessMap = (function() {
         docklessMap.url = getUrl(
           e.features,
           docklessMap.flow,
-          docklessMap.mode
+          docklessMap.mode,
+          docklessMap.startTime,
+          docklessMap.endTime
         );
         getData(docklessMap.url);
         removeStats();
@@ -237,7 +248,8 @@ const ATD_DocklessMap = (function() {
 
     handleMapResizeOnWindowChange();
     handleResetMap();
-    handleSelectChanges();
+    handleModeFlowSelectChanges();
+    handleDateChange();
     handleWelcomeModalToggle();
     handleActiveCellHighlight();
   };
@@ -249,9 +261,13 @@ const ATD_DocklessMap = (function() {
     window.Cookies.set("visited", true);
   };
 
-  const getUrl = (features, flow, mode) => {
+  const getUrl = (features, flow, mode, startTime, endTime) => {
     const coordinates = features[0].geometry.coordinates.toString();
-    const url = `${API_URL}?xy=${coordinates}&flow=${flow}&mode=${mode}`;
+    let url = `${API_URL}?xy=${coordinates}&flow=${flow}&mode=${mode}`;
+
+    if (startTime && endTime) {
+      url = `${url}&start_time=${startTime}&end_time=${endTime}`;
+    }
     return url;
   };
 
@@ -308,22 +324,63 @@ const ATD_DocklessMap = (function() {
     docklessMap.mode = $modeSelect.find("option:selected").val();
   };
 
-  const handleSelectChanges = () => {
-    const $dataSelectForm = docklessMap.$uiOverlayPane.find(
-      "#js-data-select-form"
-    );
+  function handleDateChange() {
+    $("#js-start-date-select").on("pick.datepicker", function(e) {
+      const date = convertDateStringToUnix(e.date);
+      console.log(date);
+      docklessMap.startTime = date;
+      updateUrlAndDataForDateRange();
+      closeSlidingPane();
+    });
 
-    $dataSelectForm.change(() => {
+    $("#js-end-date-select").on("pick.datepicker", function(e) {
+      const date = convertDateStringToUnix(e.date);
+      console.log(date);
+      docklessMap.endTime = date;
+      updateUrlAndDataForDateRange();
+      closeSlidingPane();
+    });
+  }
+
+  function updateUrlAndDataForDateRange() {
+    console.log(docklessMap);
+
+    // if already showing feature layer, update layer with new daterange data
+    if (docklessMap.map.getLayer("feature_layer")) {
+      let previousStartTime = docklessMap.startTime;
+      let previousEndTime = docklessMap.endTime;
+
+      let visibility = docklessMap.map.getLayoutProperty(
+        "feature_layer",
+        "visibility"
+      );
+
+      if (visibility === "visible") {
+        docklessMap.url = docklessMap.url.replace(
+          previousStartTime,
+          docklessMap.startTime
+        );
+        docklessMap.url = docklessMap.url.replace(
+          previousEndTime,
+          docklessMap.endTime
+        );
+        console.log(docklessMap.url);
+        showLoader();
+        getData(docklessMap.url);
+        removeStats();
+      }
+    }
+  }
+
+  const handleModeFlowSelectChanges = () => {
+    const $form = docklessMap.$uiOverlayPane.find("#js-mode-flow-select-form");
+
+    $form.change(() => {
       const previousFlow = docklessMap.flow;
       const previousMode = docklessMap.mode;
 
-      docklessMap.flow = $dataSelectForm
-        .find(".js-flow-select option:selected")
-        .val();
-
-      docklessMap.mode = $dataSelectForm
-        .find(".js-mode-select option:selected")
-        .val();
+      docklessMap.flow = $form.find(".js-flow-select option:selected").val();
+      docklessMap.mode = $form.find(".js-mode-select option:selected").val();
 
       closeSlidingPane();
 
