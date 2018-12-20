@@ -252,6 +252,7 @@ const ATD_DocklessMap = (function() {
     handleDateChange();
     handleWelcomeModalToggle();
     handleActiveCellHighlight();
+    handleModalClose();
   };
 
   const popWelcomeModal = () => {
@@ -414,6 +415,17 @@ const ATD_DocklessMap = (function() {
       .get(url)
       .then(response => {
         const { features, intersect_feature, total_trips } = response.data;
+
+        // If there are not enough items in the geo features Array of the response data,
+        // stop the process here before other errors occur.
+        if (features.features.length < docklessMap.numClasses) {
+          $("#errorModal").modal("show");
+          $("#errorModal .modal-body").html(`
+            <p>There is not enough data available for the area you selected. Try a bigger shape or pick another point on the map.</p>
+            <p>If the problem persists there may be an error with our server, please <a href="mailto:ATDDataTechnologyServices@austintexas.gov?subject=Bug Report: Dockless Data Explorer">email us</a> or <a href="https://github.com/cityofaustin/dockless/issues/new">create a new issue</a> on our Github repo.</p>
+          `);
+          return false;
+        }
         if (docklessMap.isDrawControlActive) {
           // When Mapbox Draw is active, touch events don't propagate so we have
           // to deactivate the controls this way.
@@ -448,6 +460,12 @@ const ATD_DocklessMap = (function() {
         `);
         throw error;
       });
+  };
+
+  const handleModalClose = () => {
+    $("#errorModal").on("hide.bs.modal", () => {
+      hideLoader();
+    });
   };
 
   const clearMapOnEscEvent = () => {
