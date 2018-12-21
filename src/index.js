@@ -155,7 +155,7 @@ const ATD_DocklessMap = (function() {
           docklessMap.startTime,
           docklessMap.endTime
         );
-        console.log(docklessMap.url);
+        // console.log(docklessMap.url);
         getData(docklessMap.url);
         removeStats();
       });
@@ -328,44 +328,31 @@ const ATD_DocklessMap = (function() {
   function handleDateChange() {
     $("#js-start-date-select").on("pick.datepicker", function(e) {
       const date = convertDateStringToUnix(e.date);
-      console.log(date);
+      const previousStartTime = docklessMap.startTime;
       docklessMap.startTime = date;
-      updateUrlAndDataForDateRange();
+      updateUrlAndDataForDateRange(previousStartTime, docklessMap.startTime);
       closeSlidingPane();
     });
 
     $("#js-end-date-select").on("pick.datepicker", function(e) {
       const date = convertDateStringToUnix(e.date);
-      console.log(date);
+      const previousEndTime = docklessMap.endTime;
       docklessMap.endTime = date;
-      updateUrlAndDataForDateRange();
+      updateUrlAndDataForDateRange(previousEndTime, docklessMap.endTime);
       closeSlidingPane();
     });
   }
 
-  function updateUrlAndDataForDateRange() {
-    console.log(docklessMap);
-
+  function updateUrlAndDataForDateRange(previousDate, newDate) {
     // if already showing feature layer, update layer with new daterange data
     if (docklessMap.map.getLayer("feature_layer")) {
-      let previousStartTime = docklessMap.startTime;
-      let previousEndTime = docklessMap.endTime;
-
       let visibility = docklessMap.map.getLayoutProperty(
         "feature_layer",
         "visibility"
       );
 
       if (visibility === "visible") {
-        docklessMap.url = docklessMap.url.replace(
-          previousStartTime,
-          docklessMap.startTime
-        );
-        docklessMap.url = docklessMap.url.replace(
-          previousEndTime,
-          docklessMap.endTime
-        );
-        console.log(docklessMap.url);
+        docklessMap.url = docklessMap.url.replace(previousDate, newDate);
         showLoader();
         getData(docklessMap.url);
         removeStats();
