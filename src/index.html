@@ -74,7 +74,7 @@
             </button>
           </div>
           <div id="map" class="h-100"></div>
-          <div id="js-trip-stats-container--mobile" class="trip-stats-container--mobile"></div>
+          <div id="js-trip-stats-container" class="trip-stats-container col-sm-9"></div>
         </div>
         <div class="col-xs-10 col-sm-3 map-overlay-pane map-overlay-pane--collapsed js-sliding-pane pt-2">
           <div class="row pb-3">
@@ -96,32 +96,28 @@
             </div>
           </div>
             <form id="js-daterange-select-form" action="#">
-              <div class="form-group row">
-                <label for="js-start-date-select" class="col-sm-4 col-form-label">Start Date</label>
-                <div class="col-sm-8">
+              <div class="form-row">
+                <div class="form-group col-6 mb-0">
+                  <label for="js-start-date-select" class="col-form-label">Start Date</label>
                   <input id="js-start-date-select" class="form-control" data-toggle="datepicker">
                 </div>
-              </div>
-              <div class="form-group row">
-                <label for="js-end-date-select" class="col-sm-4 col-form-label">End Date</label>
-                <div class="col-sm-8">
+                <div class="form-group col-6 mb-0">
+                  <label for="js-end-date-select" class="col-form-label">End Date</label>
                   <input id="js-end-date-select" class="form-control" data-toggle="datepicker">
                 </div>
               </div>
             </form>
             <form id="js-mode-flow-select-form" action="#">
-              <div class="form-group row">
-                <label for="flow-select" class="col-sm-3 col-form-label">Flow</label>
-                <div class="col-sm-9">
+              <div class="form-row">
+                <div class="form-group col-6 mb-0">
+                  <label for="flow-select" class="col-form-label">Trip Flow</label>
                   <select class="form-control js-flow-select" id="flow-select">
-                    <option value="destination" selected="selected">Trip Destinations</option>
-                    <option value="origin">Trip Origins</option>
+                    <option value="destination" selected="selected">Destinations</option>
+                    <option value="origin">Origins</option>
                   </select>
                 </div>
-              </div>
-              <div class="form-group row">
-                <label for="mode-select" class="col-sm-3 col-form-label">Mode</label>
-                <div class="col-sm-9">
+                <div class="form-group col-6 mb-0">
+                  <label for="mode-select" class="col-form-label">Mode</label>
                   <select class="form-control js-mode-select" id="mode-select">
                     <option value="all">All</option>
                     <option value="scooter">Scooter</option>

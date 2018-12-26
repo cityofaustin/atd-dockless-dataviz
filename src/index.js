@@ -207,21 +207,13 @@ const ATD_DocklessMap = (function() {
       }
 
       const html = `
-        <div id="js-cell-trip-count" class="d-none d-sm-block alert alert-dark stats" role="alert">
-         ${text}
-         </div>
-      `;
-
-      const htmlMobile = `
-        <div id="js-cell-trip-count--mobile" class="d-sm-none alert alert-dark stats trip-alert--mobile" role="alert">
+        <div id="js-cell-trip-count" class="alert alert-dark stats trip-alert--mobile" role="alert">
          ${text}
          </div>
       `;
 
       $("#js-cell-trip-count").remove();
-      $("#js-cell-trip-count--mobile").remove();
-      $("#js-data-pane").append(html);
-      $("#js-trip-stats-container--mobile").append(htmlMobile);
+      $("#js-trip-stats-container").append(html);
     }
 
     const showLayer = (layer_name, show_layer) => {
@@ -686,21 +678,14 @@ const ATD_DocklessMap = (function() {
     }
 
     const html = `
-      <div id="js-trip-alert" class="d-none d-sm-block alert alert-primary stats" role="alert">
-        ${text}
-      </div>`;
-
-    const htmlMobile = `
-      <div id="js-trip-alert--mobile" class="d-sm-none alert alert-primary stats trip-alert--mobile" role="alert">
+      <div id="js-trip-alert" class="alert alert-primary stats trip-alert--mobile" role="alert">
         ${text}
       </div>
     `;
 
     $("#js-trip-alert").remove();
-    $("#js-trip-alert--mobile").remove();
     $("#js-cell-trip-count").remove();
-    $(`#${divId}`).append(html);
-    $("#js-trip-stats-container--mobile").append(htmlMobile);
+    $("#js-trip-stats-container").append(html);
   };
 
   const openSlidingPane = () => {

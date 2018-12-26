@@ -107,12 +107,12 @@
   width: 100%;
 }
 
-.trip-stats-container--mobile {
+.trip-stats-container {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  margin: 1rem;
+  margin-bottom: 1rem;
 }
 
 /* Spinner */
