@@ -207,7 +207,7 @@ const ATD_DocklessMap = (function() {
       }
 
       const html = `
-        <div id="js-cell-trip-count" class="alert alert-dark stats trip-alert--mobile" role="alert">
+        <div id="js-cell-trip-count" class="alert alert-dark col-xs-12 col-md-6" role="alert">
          ${text}
          </div>
       `;
@@ -678,7 +678,7 @@ const ATD_DocklessMap = (function() {
     }
 
     const html = `
-      <div id="js-trip-alert" class="alert alert-primary stats trip-alert--mobile" role="alert">
+      <div id="js-trip-alert" class="alert alert-primary col-xs-12 col-md-6" role="alert">
         ${text}
       </div>
     `;
