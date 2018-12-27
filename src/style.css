@@ -115,6 +115,16 @@
   margin-bottom: 1rem;
 }
 
+.alert-dashed-border {
+  border: 2px dashed rgba(56, 61, 65, 0.55);
+}
+
+.alert-purple {
+  color: #433f5f;
+  background-color: #dcdaec;
+  border-color: #756bb1;
+}
+
 /* Spinner */
 /*https://projects.lukehaas.me/css-loaders/*/
 .loader,
