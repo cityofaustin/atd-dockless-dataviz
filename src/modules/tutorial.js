@@ -68,20 +68,20 @@ function setTutorialStep4And5() {
     // Tilt doesn't really work on mobile so we need to skip this step on small
     // devices.
     if (window.innerWidth < BOOTSTRAP_SM_BREAKPOINT) {
-      runTutorialStep5(".mapboxgl-ctrl-compass-arrow");
+      runTutorialStep5(".mapboxgl-ctrl-compass");
     } else {
       setTooltip(
-        ".mapboxgl-ctrl-compass-arrow",
+        ".mapboxgl-ctrl-compass",
         "right",
         "Click & drag here to tilt the map"
       );
-      showTooltip(".mapboxgl-ctrl-compass-arrow");
+      showTooltip(".mapboxgl-ctrl-compass");
 
       // set the next step's trigger based on device width
-      $(".mapboxgl-ctrl-compass-arrow").on("mousedown.step5", () => {
+      $(".mapboxgl-ctrl-compass").on("mousedown.step5", () => {
         runTutorialStep5();
-        $(".mapboxgl-ctrl-compass-arrow").off("mousedown.step5");
-        $(".mapboxgl-ctrl-compass-arrow").tooltip("hide");
+        $(".mapboxgl-ctrl-compass").off("mousedown.step5");
+        $(".mapboxgl-ctrl-compass").tooltip("hide");
       });
     }
 
