@@ -509,14 +509,9 @@ const ATD_DocklessMap = (function() {
     $("#js-legend").empty();
 
     // Add legend title
-    $("#js-legend").append("<span class='legend-title'>Number of Trips</span>");
-
-    // Add time range
-    $("#js-legend").append(`
-      <span class='font-italic small mb-2 d-block'>
-        Data from <span id="js-data-date-range">July - Sept 2018</span>
-      </span>
-    `);
+    $("#js-legend").append(
+      "<span class='legend-title mb-2'>Number of Trips</span>"
+    );
 
     // Loop over class breaks and add to legend keys
     for (let i = 0; i < breaks.length; i++) {
