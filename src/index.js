@@ -197,31 +197,23 @@ const ATD_DocklessMap = (function() {
           feature.properties.trips
         )} (${docklessMap.formatPct(
           trip_percent
-        )}) trips started in the clicked cell.`;
+        )}) trips started in the selected cell.`;
       } else if (docklessMap.flow === "destination") {
         text = `${docklessMap.formatKs(
           feature.properties.trips
         )} (${docklessMap.formatPct(
           trip_percent
-        )}) trips ended in the clicked cell.`;
+        )}) trips ended in the selected cell.`;
       }
 
       const html = `
-        <div id="js-cell-trip-count" class="d-none d-sm-block alert alert-dark stats" role="alert">
-         ${text}
-         </div>
-      `;
-
-      const htmlMobile = `
-        <div id="js-cell-trip-count--mobile" class="d-sm-none alert alert-dark stats trip-alert--mobile" role="alert">
+        <div id="js-cell-trip-count" class="alert alert-purple col-xs-12 col-md-5 ml-sm-2 js-stats-alert" role="alert">
          ${text}
          </div>
       `;
 
       $("#js-cell-trip-count").remove();
-      $("#js-cell-trip-count--mobile").remove();
-      $("#js-data-pane").append(html);
-      $("#js-trip-stats-container--mobile").append(htmlMobile);
+      $("#js-trip-stats-container").append(html);
     }
 
     const showLayer = (layer_name, show_layer) => {
@@ -560,7 +552,7 @@ const ATD_DocklessMap = (function() {
     `);
   };
 
-  const removeStats = (selector = "stats") => {
+  const removeStats = (selector = "js-stats-alert") => {
     $("." + selector).remove();
   };
 
@@ -678,29 +670,22 @@ const ATD_DocklessMap = (function() {
     if (docklessMap.flow === "origin") {
       text = `${docklessMap.formatKs(
         total_trips
-      )} trips terminated in the selected area.`;
+      )} trips terminated in the outlined area.`;
     } else if (docklessMap.flow === "destination") {
       text = `${docklessMap.formatKs(
         total_trips
-      )}  trips originated in the selected area.`;
+      )}  trips originated in the outlined area.`;
     }
 
     const html = `
-      <div id="js-trip-alert" class="d-none d-sm-block alert alert-primary stats" role="alert">
-        ${text}
-      </div>`;
-
-    const htmlMobile = `
-      <div id="js-trip-alert--mobile" class="d-sm-none alert alert-primary stats trip-alert--mobile" role="alert">
+      <div id="js-trip-alert" class="alert alert-secondary alert-dashed-border col-xs-12 col-md-5 mr-sm-2 js-stats-alert" role="alert">
         ${text}
       </div>
     `;
 
     $("#js-trip-alert").remove();
-    $("#js-trip-alert--mobile").remove();
     $("#js-cell-trip-count").remove();
-    $(`#${divId}`).append(html);
-    $("#js-trip-stats-container--mobile").append(htmlMobile);
+    $("#js-trip-stats-container").append(html);
   };
 
   const openSlidingPane = () => {
