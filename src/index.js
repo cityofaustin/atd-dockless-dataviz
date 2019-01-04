@@ -673,7 +673,7 @@ const ATD_DocklessMap = (function() {
     }
 
     const html = `
-      <div id="js-trip-alert" class="alert alert-secondary alert-dashed-border col-xs-12 col-md-5 mr-sm-2 js-stats-alert" role="alert">
+      <div id="js-trip-alert" class="alert alert-primary alert-dashed-border col-xs-12 col-md-5 mr-sm-2 js-stats-alert" role="alert">
         ${text}
       </div>
     `;
