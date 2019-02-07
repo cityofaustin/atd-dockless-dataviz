@@ -21,7 +21,7 @@ import {
 import { numberWithCommas } from "./modules/numberWithCommas";
 import {
   initializeDatepicker,
-  convertDateStringToUnix
+  convertDateFieldInputToUnixTime
 } from "./modules/datepicker";
 
 // Vendor CSS
@@ -318,20 +318,22 @@ const ATD_DocklessMap = (function() {
   };
 
   function handleDateChange() {
-    $("#js-start-date-select").on("pick.datepicker", function(e) {
-      const date = convertDateStringToUnix(e.date);
+    $("#js-start-date-select").on("change changeDate", function(e) {
+      const date = convertDateFieldInputToUnixTime(e.target.value);
       const previousStartTime = docklessMap.startTime;
       docklessMap.startTime = date;
       updateUrlAndDataForDateRange(previousStartTime, docklessMap.startTime);
       closeSlidingPane();
+      $(this).datepicker("hide");
     });
 
-    $("#js-end-date-select").on("pick.datepicker", function(e) {
-      const date = convertDateStringToUnix(e.date);
+    $("#js-end-date-select").on("change changeDate", function(e) {
+      const date = convertDateFieldInputToUnixTime(e.target.value);
       const previousEndTime = docklessMap.endTime;
       docklessMap.endTime = date;
       updateUrlAndDataForDateRange(previousEndTime, docklessMap.endTime);
       closeSlidingPane();
+      $(this).datepicker("hide");
     });
   }
 

@@ -1,8 +1,10 @@
-import "../../node_modules/@chenfengyuan/datepicker/dist/datepicker.min.js";
-import "../../node_modules/@chenfengyuan/datepicker/dist/datepicker.min.css";
+// Using Bootstrap-Datepicker
+// Docs: https://www.eyecon.ro/bootstrap-datepicker/
+import "./datepicker/js/bootstrap-datepicker.js";
+import "./datepicker/css/datepicker.css";
 
-const today = new Date();
-const startDay = "01/01/2018";
+const today = new Date().getTime();
+const startDay = new Date("01/01/2018").getTime();
 
 const startOptions = {
   date: startDay,
@@ -20,14 +22,16 @@ const endOptions = {
   autoPick: true
 };
 
-export function convertDateStringToUnix(dateString) {
-  let date = new Date(dateString);
+export function convertDateFieldInputToUnixTime(dateInput) {
+  let date = new Date(dateInput);
   return date.getTime();
 }
 
 export function initializeDatepicker(map) {
-  $("#js-start-date-select").datepicker(startOptions);
-  $("#js-end-date-select").datepicker(endOptions);
-  map.startTime = convertDateStringToUnix(startDay);
-  map.endTime = convertDateStringToUnix(today);
+  $("#js-start-date-select").datepicker();
+  $("#js-end-date-select").datepicker();
+  map.startTime = startDay;
+  map.endTime = today;
+  $("#js-start-date-select").datepicker("setValue", map.startTime);
+  $("#js-end-date-select").datepicker("setValue", map.endTime);
 }
