@@ -1,3 +1,5 @@
+// Using Bootstrap-Datepicker
+// Docs: https://www.eyecon.ro/bootstrap-datepicker/
 import "./datepicker/js/bootstrap-datepicker.js";
 import "./datepicker/css/datepicker.css";
 
