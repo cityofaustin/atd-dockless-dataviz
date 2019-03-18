@@ -12,7 +12,7 @@ This repo hosts code for mapping and visualizing dockless mobility data origins 
 
 ## Getting Data
 
-In order to pull data into the map when you run this code locally on your computer, you have a two options.
+In order to pull data into the map when you run this code locally on your computer, you have two options:
 
 1.  Download the [dockless-api](https://github.com/cityofaustin/dockless-api) repo and follow the instructions to set it up locally on your machine.
     - If you install the dockless-api using Docker, you should be able to pull data without further configuration.
