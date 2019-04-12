@@ -98,7 +98,7 @@ const ATD_DocklessMap = (function() {
     // Temporarily show under construction modal
     $("#underConstructionModal").modal("show");
     // popWelcomeModal();
-    initializeTutorial(docklessMap);
+    // initializeTutorial(docklessMap);
     initializeDatepicker(docklessMap);
   };
 
