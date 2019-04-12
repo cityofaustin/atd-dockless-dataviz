@@ -94,8 +94,14 @@ const ATD_DocklessMap = (function() {
     initalizeMap();
     runAppCode();
     registerEventHandlers();
-    popWelcomeModal();
-    initializeTutorial(docklessMap);
+
+    // Temporarily show under construction modal
+    console.log('🚧 under construction warning')
+    $(window).on('load', function () {
+      $("#underConstructionModal").modal("show");
+    })
+    // popWelcomeModal();
+    // initializeTutorial(docklessMap);
     initializeDatepicker(docklessMap);
   };
 
