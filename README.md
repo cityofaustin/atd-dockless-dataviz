@@ -23,3 +23,8 @@ In order to pull data into the map when you run this code locally on your comput
     - In order to reference the production API endpoint, you will need to change the `API_URL` value in the `webpack.dev.js` file:
       - from: `API_URL: JSON.stringify("http://localhost:8000/v1/trips")`
       - to: `API_URL: JSON.stringify("https://dockless-data.austintexas.io/v1/trips")`
+      
+## License
+As a work of the City of Austin, this project is in the public domain within the United States.
+
+Additionally, we waive copyright and related rights in the work worldwide through the CC0 1.0 Universal public domain dedication.
