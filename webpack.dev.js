@@ -13,7 +13,7 @@ module.exports = merge(common, {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.DefinePlugin({
-      API_URL: JSON.stringify("http://localhost:5000/v1/trips")
+      API_URL: JSON.stringify("http://localhost:8000/v1/trips")
     })
   ]
 });
