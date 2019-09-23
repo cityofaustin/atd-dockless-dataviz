@@ -45,7 +45,7 @@ function setTutorialStep2(mapObject) {
     window.ATD_TUTORIAL.popupStep2 = new mapboxgl.Popup()
       .setLngLat(MAP_CENTER)
       .setText(
-        "Click any spot on the map to see where dockless trips started/ended"
+        "Click any spot on the map to see where shared micromobility trips started/ended"
       )
       .addTo(mapObject.map);
   });

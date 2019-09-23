@@ -1,6 +1,6 @@
-# Dockless Data Explorer
+# Shared Micromobility Data Explorer
 
-This repo hosts code for mapping and visualizing dockless mobility data origins and destinations using Mapbox GL JS.
+This repo hosts code for mapping and visualizing shared micromobility data origins and destinations using Mapbox GL JS.
 
 ## Getting Started
 
