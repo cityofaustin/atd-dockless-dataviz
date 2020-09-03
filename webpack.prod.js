@@ -22,7 +22,7 @@ module.exports = merge(common, {
       }
     }),
     new webpack.DefinePlugin({
-      API_URL: JSON.stringify("https://dockless-data.austintexas.io/v1/trips")
+      API_URL: JSON.stringify("https://atd-micromobility-api.austinmobility.io/v1/trips")
     })
   ]
 });
