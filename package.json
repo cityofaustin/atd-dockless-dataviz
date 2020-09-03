@@ -45,7 +45,7 @@
     "es6-promise-promise": "^1.0.0",
     "jquery": "^3.5.0",
     "js-cookie": "^2.2.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.20",
     "mapbox-gl": "^1.4.0",
     "popper.js": "^1.16.1",
     "simple-statistics": "^7.0.5"
