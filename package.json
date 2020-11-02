@@ -48,6 +48,6 @@
     "lodash": "^4.17.15",
     "mapbox-gl": "^1.4.0",
     "popper.js": "^1.15.0",
-    "simple-statistics": "^7.0.5"
+    "simple-statistics": "^7.3.2"
   }
 }
