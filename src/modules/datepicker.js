@@ -4,7 +4,9 @@ import "./datepicker/js/bootstrap-datepicker.js";
 import "./datepicker/css/datepicker.css";
 
 const today = new Date().getTime();
-const startDay = new Date("01/01/2018").getTime();
+let lastMonth = new Date(today);
+lastMonth.setMonth(lastMonth.getMonth()-1)
+const startDay = lastMonth.getTime();
 
 const startOptions = {
   date: startDay,
